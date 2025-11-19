@@ -1,1 +1,19 @@
 <h1>Home page</h1>
+
+
+<% if user_signed_in? %>
+  <div data-controller="push-subscription"
+       data-push-subscription-vapid-public-key-value="<%= Rails.application.credentials.web_push[:public_key] %>"
+       data-push-subscription-post-url-value="<%= web_push_subscriptions_path %>">
+
+    <button data-action="click->push-subscription#subscribe">
+      Enable Push Notifications
+    </button>
+  </div>
+
+  <br>
+
+  <%= button_to "Send Test Notification", test_notification_path, method: :post %>
+<% else %>
+  <p>Please log in to manage notifications.</p>
+<% end %>
