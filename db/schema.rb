@@ -10,9 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_20_002217) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_20_012736) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "path_devices", force: :cascade do |t|
+    t.bigint "path_id", null: false
+    t.bigint "web_push_subscription_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["path_id"], name: "index_path_devices_on_path_id"
+    t.index ["web_push_subscription_id"], name: "index_path_devices_on_web_push_subscription_id"
+  end
+
+  create_table "paths", force: :cascade do |t|
+    t.string "name"
+    t.datetime "strike"
+    t.datetime "completed_at"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_paths_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -37,5 +56,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_20_002217) do
     t.index ["user_id"], name: "index_web_push_subscriptions_on_user_id"
   end
 
+  add_foreign_key "path_devices", "paths"
+  add_foreign_key "path_devices", "web_push_subscriptions"
+  add_foreign_key "paths", "users"
   add_foreign_key "web_push_subscriptions", "users"
 end
