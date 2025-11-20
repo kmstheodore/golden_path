@@ -1,0 +1,27 @@
+<h1>Register This Device</h1>
+<p>Give this device a name so you can recognize it later.</p>
+
+<div data-controller="push-subscription"
+     data-push-subscription-vapid-public-key-value="<%= Rails.application.credentials.web_push[:public_key] %>"
+     data-push-subscription-post-url-value="<%= web_push_subscriptions_path %>">
+
+  <div class="field">
+    <label for="device_name">Device Name:</label>
+    <input type="text" id="device_name" placeholder="e.g. My iPhone" data-push-subscription-target="name">
+  </div>
+  <br>
+
+  <button data-action="click->push-subscription#subscribe">
+    Enable Push Notifications
+  </button>
+</div>
+
+<br>
+<hr>
+<br>
+
+<h3>Test It Out</h3>
+<%= button_to "Send Test Notification", test_notification_path, method: :post %>
+
+<br><br>
+<%= link_to "Back to Home", root_path %> | <%= link_to "View My Devices", my_devices_path %>

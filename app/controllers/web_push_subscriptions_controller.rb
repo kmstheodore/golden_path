@@ -4,16 +4,22 @@ class WebPushSubscriptionsController < ApplicationController
   def create
     subscription_params = params.require(:subscription).permit(:endpoint, keys: [ :p256dh, :auth ])
 
-    # Save the subscription to the database associated with the current user
-    current_user.web_push_subscriptions.find_or_create_by(
+    # Find or create the subscription, then update the nickname
+    subscription = current_user.web_push_subscriptions.find_or_initialize_by(
       endpoint: subscription_params[:endpoint],
       p256dh_key: subscription_params[:keys][:p256dh],
       auth_key: subscription_params[:keys][:auth]
     )
 
+    # Update the nickname (allows renaming if they re-register the same device)
+    subscription.update(nickname: params[:nickname])
+
     head :ok
   end
+
+  # ... existing test_notification method ...
   def test_notification
+    # (Keep your existing code here)
     # Find the user's most recent device
     sub = current_user.web_push_subscriptions.last
 

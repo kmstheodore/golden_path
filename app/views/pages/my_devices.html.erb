@@ -1,0 +1,28 @@
+<h1>My Registered Devices</h1>
+
+<% if @subscriptions.any? %>
+  <table border="1" cellpadding="10">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Registered On</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @subscriptions.each do |sub| %>
+        <tr>
+          <td><strong><%= sub.nickname.presence || "Unnamed Device" %></strong></td>
+          <td><%= sub.created_at.strftime("%B %d, %Y") %></td>
+          <td><small><%= truncate(sub.endpoint, length: 30) %></small></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>You have not enabled push notifications on any devices yet.</p>
+<% end %>
+
+<br>
+<%= link_to "Register a New Device", register_device_path %> |
+<%= link_to "Back to Home", root_path %>

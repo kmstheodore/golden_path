@@ -5,16 +5,22 @@ export default class extends Controller {
     vapidPublicKey: String,
     postUrl: String
   }
+  static targets = ["name"] // Define the target
 
   async connect() {
     if (!("serviceWorker" in navigator)) return
-
-    // Register service worker if not already done
     navigator.serviceWorker.register("/service-worker.js")
   }
 
   async subscribe() {
     if (!("serviceWorker" in navigator)) return
+
+    // valid the name input isn't empty
+    const nickname = this.nameTarget.value
+    if (!nickname) {
+      alert("Please name this device first.")
+      return
+    }
 
     const registration = await navigator.serviceWorker.ready
     let subscription = await registration.pushManager.getSubscription()
@@ -26,10 +32,10 @@ export default class extends Controller {
       })
     }
 
-    this.sendSubscriptionToServer(subscription)
+    this.sendSubscriptionToServer(subscription, nickname)
   }
 
-  async sendSubscriptionToServer(subscription) {
+  async sendSubscriptionToServer(subscription, nickname) {
     const response = await fetch(this.postUrlValue, {
       method: "POST",
       headers: {
@@ -37,18 +43,19 @@ export default class extends Controller {
         "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
       },
       body: JSON.stringify({
-        subscription: subscription.toJSON()
+        subscription: subscription.toJSON(),
+        nickname: nickname // Send the name
       })
     })
 
     if (response.ok) {
       alert("Device registered successfully!")
+      this.nameTarget.value = "" // Clear the input
     } else {
       alert("Failed to register device.")
     }
   }
 
-  // Helper to convert VAPID key
   urlBase64ToUint8Array(base64String) {
     const padding = "=".repeat((4 - base64String.length % 4) % 4)
     const base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/")
