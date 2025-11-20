@@ -4,4 +4,5 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   has_many :web_push_subscriptions, dependent: :destroy
+  has_many :paths, dependent: :destroy
 end
