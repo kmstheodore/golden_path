@@ -13,7 +13,6 @@ class WebPushSubscriptionsController < ApplicationController
 
     head :ok
   end
-
   def test_notification
     # Find the user's most recent device
     sub = current_user.web_push_subscriptions.last

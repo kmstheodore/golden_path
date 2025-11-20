@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   # root "posts#index"
   root "pages#home"
   get "about" => "pages#about"
+  get "my_devices" => "pages#my_devices"
 
   resources :web_push_subscriptions, only: [ :create ]
   post "test_notification", to: "web_push_subscriptions#test_notification"
