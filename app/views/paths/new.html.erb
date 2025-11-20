@@ -1,0 +1,44 @@
+<h1>New Path</h1>
+
+<%= form_with(model: @path) do |form| %>
+  <% if @path.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(@path.errors.count, "error") %> prohibited this path from being saved:</h2>
+      <ul>
+        <% @path.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, required: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :strike, "When should we notify you?" %>
+    <%= form.datetime_field :strike, required: true %>
+  </div>
+
+  <div class="field">
+    <label>Select Devices to Notify:</label>
+    <div style="margin-left: 10px;">
+      <%# This loops through all the user's devices and creates a checkbox for each %>
+      <%= form.collection_check_boxes :device_ids, current_user.web_push_subscriptions, :id, :nickname do |b| %>
+        <div>
+          <%= b.check_box %>
+          <%= b.label { b.text.presence || "Unnamed Device (#{b.object.created_at.to_date})" } %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="actions" style="margin-top: 20px;">
+    <%= form.submit "Create Path" %>
+  </div>
+<% end %>
+
+<br>
+<%= link_to "Back to Paths", paths_path %>

@@ -18,4 +18,9 @@ Rails.application.routes.draw do
   get "register_device" => "pages#register_device"
   resources :web_push_subscriptions, only: [ :create ]
   post "test_notification", to: "web_push_subscriptions#test_notification"
+  resources :paths, only: [ :index, :new, :create ] do
+    member do
+      patch :complete
+    end
+  end
 end

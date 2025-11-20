@@ -1,0 +1,22 @@
+<h1>My Paths</h1>
+
+<%= link_to "New Path", new_path_path %>
+
+<ul style="margin-top: 20px;">
+  <% @paths.each do |path| %>
+    <li style="margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+      <strong><%= path.name %></strong>
+      <br>
+      <small>Strike Time: <%= path.strike.strftime("%B %d at %I:%M %p") %></small>
+      <br>
+
+      <% if path.completed? %>
+        <span style="color: green;">✅ Completed on <%= path.completed_at.strftime("%m/%d %I:%M%p") %></span>
+      <% else %>
+        <%= button_to "Mark Complete", complete_path_path(path), method: :patch %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to "Back to Home", root_path %>
