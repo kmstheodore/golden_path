@@ -1,6 +1,5 @@
 <h1>Home page</h1>
 
-
 <% if user_signed_in? %>
   <div data-controller="push-subscription" class="subscription-box" style="margin-top: 20px; border: 1px solid #ccc; padding: 20px;">
     <h3>Enable Notifications</h3>
@@ -12,19 +11,20 @@
       Subscribe Device
     </button>
   </div>
+
+  <% if current_user.web_push_subscriptions.any? %>
+    <hr>
+    <h3>Your Devices</h3>
+    <ul>
+      <% current_user.web_push_subscriptions.each do |sub| %>
+        <li>
+          <strong><%= sub.device_name %></strong>
+          <%= button_to "Send Test Push", test_web_push_subscription_path(sub), method: :post %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+
 <% else %>
   <%= link_to "Sign In", new_user_session_path %>
-<% end %>
-
-<% if current_user.web_push_subscriptions.any? %>
-  <hr>
-  <h3>Your Devices</h3>
-  <ul>
-    <% current_user.web_push_subscriptions.each do |sub| %>
-      <li>
-        <strong><%= sub.device_name %></strong>
-        <%= button_to "Send Test Push", test_web_push_subscription_path(sub), method: :post %>
-      </li>
-    <% end %>
-  </ul>
 <% end %>
