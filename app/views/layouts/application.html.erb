@@ -22,6 +22,16 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            // Register the service worker located at /service-worker
+            navigator.serviceWorker.register('<%= pwa_service_worker_path %>')
+                .then(registration => console.log('Service Worker registered successfully', registration))
+                .catch(error => console.log('Service Worker registration failed', error));
+        }
+    </script>
   </head>
 
   <body>
