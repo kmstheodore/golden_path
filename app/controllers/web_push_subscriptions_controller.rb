@@ -4,7 +4,7 @@ class WebPushSubscriptionsController < ApplicationController
   def create
     # The browser sends:
     # {
-    #   subscription: { 
+    #   subscription: {
     #     endpoint: "...",
     #     keys: { p256dh: "...", auth: "..." }
     #   },
