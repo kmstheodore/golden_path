@@ -1,1 +1,17 @@
 <h1>Home page</h1>
+
+
+<% if user_signed_in? %>
+  <div data-controller="push-subscription" class="subscription-box" style="margin-top: 20px; border: 1px solid #ccc; padding: 20px;">
+    <h3>Enable Notifications</h3>
+    <p data-push-subscription-target="status">Status: Checking...</p>
+
+    <input type="text" data-push-subscription-target="device" placeholder="Device Name (e.g. My MacBook)" style="padding: 5px;">
+
+    <button data-action="click->push-subscription#subscribe" data-push-subscription-target="button" style="padding: 5px 10px;">
+      Subscribe Device
+    </button>
+  </div>
+<% else %>
+  <%= link_to "Sign In", new_user_session_path %>
+<% end %>
