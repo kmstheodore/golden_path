@@ -1,6 +1,36 @@
 class WebPushSubscriptionsController < ApplicationController
   before_action :authenticate_user! # Ensure only logged-in users can subscribe
+  def test
+    @subscription = current_user.web_push_subscriptions.find(params[:id])
 
+    message = {
+      title: "Test Notification",
+      body: "It works! Hello from Rails 8.",
+      path: "/paths" # Optional: where clicking takes the user
+    }
+
+    begin
+      WebPush.payload_send(
+        message: JSON.generate(message),
+        endpoint: @subscription.endpoint,
+        p256dh: @subscription.p256dh,
+        auth: @subscription.auth,
+        vapid: {
+          subject: "mailto:admin@example.com",
+          public_key: ENV['VAPID_PUBLIC_KEY'],
+          private_key: ENV['VAPID_PRIVATE_KEY']
+        }
+      )
+      flash[:notice] = "Notification sent!"
+    rescue WebPush::InvalidSubscription => e
+      @subscription.destroy
+      flash[:alert] = "Subscription invalid - removed."
+    rescue => e
+      flash[:alert] = "Error: #{e.message}"
+    end
+
+    redirect_back(fallback_location: root_path)
+  end
   def create
     # The browser sends:
     # {
