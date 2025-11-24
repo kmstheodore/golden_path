@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  strike_time: 2025-11-24 22:31:36
+  user: one
+  web_push_subscription: one
+
+two:
+  name: MyString
+  strike_time: 2025-11-24 22:31:36
+  user: two
+  web_push_subscription: two
