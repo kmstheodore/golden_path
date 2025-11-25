@@ -20,6 +20,7 @@
         <li>
           <strong><%= sub.device_name %></strong>
           <%= button_to "Send Test Push", test_web_push_subscription_path(sub), method: :post %>
+          <%= link_to "New Path", new_path_path %>
         </li>
       <% end %>
     </ul>
