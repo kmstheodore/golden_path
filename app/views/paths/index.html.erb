@@ -1,0 +1,15 @@
+<h1>My Paths</h1>
+<%= link_to "New Path", new_path_path, style: "display:inline-block; margin-bottom: 20px; font-weight:bold;" %>
+
+<ul>
+  <% @paths.each do |path| %>
+    <li style="margin-bottom: 10px;">
+      <strong><%= path.name %></strong><br>
+      <small>Due: <%= path.strike_time.to_fs(:short) %></small><br>
+      <small>Device: <%= path.web_push_subscription&.device_name || "All Devices (Logic TBD)" %></small>
+      <%= button_to "Delete", path_path(path), method: :delete, style: "font-size: 0.8em; color: red;" %>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to "Back to Home", root_path %>
