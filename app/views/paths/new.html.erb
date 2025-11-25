@@ -2,7 +2,7 @@
 
 <%= form_with(model: @path) do |form| %>
   <% if @path.errors.any? %>
-    <div style="color: red">
+    <div style="color: red; margin-bottom: 15px;">
       <h2><%= pluralize(@path.errors.count, "error") %> prohibited this path from being saved:</h2>
       <ul>
         <% @path.errors.each do |error| %>

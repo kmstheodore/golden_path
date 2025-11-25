@@ -7,7 +7,10 @@
       <strong><%= path.name %></strong><br>
       <small>Due: <%= path.strike_time.to_fs(:short) %></small><br>
       <small>Device: <%= path.web_push_subscription&.device_name || "All Devices (Logic TBD)" %></small>
-      <%= button_to "Delete", path_path(path), method: :delete, style: "font-size: 0.8em; color: red;" %>
+
+      <div style="margin-top:5px;">
+        <%= button_to "Delete", path_path(path), method: :delete, style: "font-size: 0.8em; color: red;" %>
+      </div>
     </li>
   <% end %>
 </ul>

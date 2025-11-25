@@ -7,7 +7,7 @@ class PathsController < ApplicationController
 
   def new
     @path = current_user.paths.build
-    # Load subscriptions for the dropdown
+    # Get list of devices for the dropdown
     @devices = current_user.web_push_subscriptions.map { |sub| [sub.device_name, sub.id] }
   end
 
@@ -30,7 +30,6 @@ class PathsController < ApplicationController
   private
 
   def path_params
-    # Allow the user to select a specific subscription ID
     params.require(:path).permit(:name, :strike_time, :web_push_subscription_id)
   end
 end
