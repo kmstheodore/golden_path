@@ -8,3 +8,11 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+body {
+    height: 100vh;
+    background-color : #0F0F0F;
+}
+
+h1 {
+    color: #E5E4E2;
+}

@@ -1,0 +1,34 @@
+<div class="welcome-container" style="margin-top: 20px;">
+  <h2>Welcome to Golden Path</h2>
+  <p>Please log in to continue.</p>
+
+  <%= form_with(scope: :user, url: session_path(:user), data: { turbo: false }) do |f| %>
+    <div style="margin-bottom: 10px;">
+      <%= f.label :email, style: "display: block" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true %>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+      <%= f.label :password, style: "display: block" %>
+      <%= f.password_field :password, autocomplete: "current-password", required: true %>
+    </div>
+
+    <% if devise_mapping.rememberable? %>
+      <div style="margin-bottom: 10px;">
+        <%= f.check_box :remember_me %>
+        <%= f.label :remember_me %>
+      </div>
+    <% end %>
+
+    <div style="margin-bottom: 10px;">
+      <%= f.submit "Log in" %>
+    </div>
+  <% end %>
+
+  <hr>
+
+  <h3>New here?</h3>
+  <p>
+    <%= link_to "Sign up now", new_user_registration_path, class: "button" %>
+  </p>
+</div>

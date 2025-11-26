@@ -1,8 +1,18 @@
 Rails.application.routes.draw do
+  devise_for :users
+
+  # If the user is logged in, the root path is the home dashboard
+  authenticated :user do
+    root "pages#home", as: :authenticated_root
+  end
+
+  # If the user is NOT logged in, the root path is the welcome page
+  unauthenticated do
+    root "pages#welcome", as: :unauthenticated_root
+  end
   get "paths/index"
   get "paths/new"
   get "paths/create"
-  devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -20,5 +30,4 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  root "pages#home"
 end

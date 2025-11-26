@@ -1,32 +1,26 @@
 <h1>Home page</h1>
 
-<% if user_signed_in? %>
-  <div data-controller="push-subscription" class="subscription-box" style="margin-top: 20px; border: 1px solid #ccc; padding: 20px;">
-    <h3>Enable Notifications</h3>
-    <p data-push-subscription-target="status">Status: Checking...</p>
+<div data-controller="push-subscription" class="subscription-box" style="margin-top: 20px; border: 1px solid #ccc; padding: 20px;">
+  <h3>Enable Notifications</h3>
+  <p data-push-subscription-target="status">Status: Checking...</p>
 
-    <input type="text" data-push-subscription-target="device" placeholder="Device Name (e.g. My MacBook)" style="padding: 5px;">
+  <input type="text" data-push-subscription-target="device" placeholder="Device Name (e.g. My MacBook)" style="padding: 5px;">
 
-    <button data-action="click->push-subscription#subscribe" data-push-subscription-target="button" style="padding: 5px 10px;">
-      Subscribe Device
-    </button>
-  </div>
+  <button data-action="click->push-subscription#subscribe" data-push-subscription-target="button" style="padding: 5px 10px;">
+    Subscribe Device
+  </button>
+</div>
 
-  <% if current_user.web_push_subscriptions.any? %>
-    <hr>
-    <h3>Your Devices</h3>
-    <ul>
-      <% current_user.web_push_subscriptions.each do |sub| %>
-        <li>
-          <strong><%= sub.device_name %></strong>
-          <%= button_to "Send Test Push", test_web_push_subscription_path(sub), method: :post %>
-          <%= link_to "New Path", new_path_path %>
-        </li>
-      <% end %>
-    </ul>
-  <% end %>
-
-<% else %>
-  <%= link_to "Sign In", new_user_session_path %>
-  <%= link_to "Sign Up", new_user_registration_path %>
+<% if current_user.web_push_subscriptions.any? %>
+  <hr>
+  <h3>Your Devices</h3>
+  <ul>
+    <% current_user.web_push_subscriptions.each do |sub| %>
+      <li>
+        <strong><%= sub.device_name %></strong>
+        <%= button_to "Send Test Push", test_web_push_subscription_path(sub), method: :post %>
+        <%= link_to "New Path", new_path_path %>
+      </li>
+    <% end %>
+  </ul>
 <% end %>
