@@ -5,12 +5,19 @@
   <%= stylesheet_link_tag "welcome", "data-turbo-track": "reload" %>
 <% end %>
 
+<%# The Canvas: Linked to the controller for the animation %>
+<canvas id="particle-canvas" data-controller="welcome-background"></canvas>
+
 <div id="welcome-screen">
   <div class="welcome-card">
 
     <div class="welcome-header">
       <h1>GOLDEN PATH</h1>
       <p>The Path is better together.</p>
+      <%# Added the luxury quote for stylistic consistency %>
+      <p style="font-style: italic; font-size: 0.95rem; color: var(--text-secondary); margin-top: 0.75rem; line-height: 1.6; font-weight: 300;">
+        “Seek freedom and become captive of your desires. Seek discipline and find your liberty.”
+      </p>
     </div>
 
     <div class="welcome-form-wrapper">
@@ -45,10 +52,10 @@
         </div>
 
         <div class="welcome-buttons-container">
-          <%# Sign Up (Primary Action) %>
+          <%# Sign Up (Primary Action - Solid Button) %>
           <%= f.submit "SIGN UP", class: "welcome-button solid-button" %>
 
-          <%# Log In (Secondary/Back) %>
+          <%# Log In (Secondary/Back - Outline Button) %>
           <%= link_to "LOG IN", new_session_path(resource_name), class: "welcome-button outline-button" %>
         </div>
 

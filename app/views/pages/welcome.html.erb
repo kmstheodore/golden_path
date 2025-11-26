@@ -1,12 +1,19 @@
 <%# app/views/pages/welcome.html.erb %>
 
+<% content_for :head do %>
+  <%= stylesheet_link_tag "welcome", "data-turbo-track": "reload" %>
+<% end %>
+
+<%# The Canvas: Linked to the controller %>
+<canvas id="particle-canvas" data-controller="welcome-background"></canvas>
+
 <div id="welcome-screen">
   <div class="welcome-card">
 
     <div class="welcome-header">
       <h1>GOLDEN PATH</h1>
       <p>Progress is better together.</p>
-      <%# The Quote %>
+
       <p style="font-style: italic; font-size: 0.8rem; margin-top: 15px; opacity: 0.8; line-height: 1.4;">
         “Seek freedom and become captive of your desires. Seek discipline and find your liberty.”
       </p>
@@ -37,10 +44,7 @@
         <% end %>
 
         <div class="welcome-buttons-container">
-          <%# Log In (Primary) %>
           <%= f.submit "LOG IN", class: "welcome-button solid-button" %>
-
-          <%# Sign Up (Secondary) %>
           <%= link_to "SIGN UP", new_user_registration_path, class: "welcome-button outline-button" %>
         </div>
 

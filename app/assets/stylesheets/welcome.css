@@ -1,72 +1,102 @@
 /* app/assets/stylesheets/welcome.css */
 
 :root {
-    /* Design System extracted from image */
-    --bg-gradient-start: #D8C076; /* Lighter Gold */
-    --bg-gradient-end:   #A68B4B; /* Darker Gold/Brown */
+    /* --- OBSIDIAN PALETTE --- */
 
-    --card-bg:       #F3F0EB; /* Creamy Off-White */
-    --text-primary:  #3E3B32; /* Dark Brown-Grey */
-    --text-secondary:#7A7669; /* Muted Grey for subtitle */
+    /* Text: Champagne Gold & Cool Silver/Grey */
+    --text-primary:   #E8DCCA;
+    --text-secondary: #A0A0A0;
+    --text-muted:     #666666;
 
-    --input-border:  #9D988C;
-    --input-bg:      #FCFAF7;
+    /* Card: Dark Smoked Glass (Obsidian) */
+    --card-bg:        rgba(15, 15, 15, 0.70); /* Neutral dark tint */
+    --card-border:    rgba(255, 255, 255, 0.08); /* Very subtle white/glass edge */
 
-    --btn-primary:   #D4AF37; /* Mustard Gold */
-    --btn-text-on-primary: #FFFFFF;
+    /* Inputs: Dark Polish */
+    --input-bg:       rgba(255, 255, 255, 0.03);
+    --input-border:   rgba(80, 80, 80, 0.5);
+    --input-focus:    #D4AF37; /* Gold Focus */
 
-    --btn-outline-border: #8C877D;
-    --btn-outline-text:   #6D685A;
+    /* Buttons */
+    --btn-primary:    #C5A059; /* Muted Gold */
+    --btn-text:       #000000;
+
+    --btn-outline-border: #666666;
+    --btn-outline-text:   #E8DCCA;
 }
 
-/* 1. The Screen Background */
+/* 1. Canvas Styles - OBSIDIAN VOID */
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    /* Pure Black to Deepest Grey Gradient */
+    background: linear-gradient(to bottom, #000000, #1a1a1a);
+}
+
+/* 2. Screen Wrapper */
 #welcome-screen {
-    min-height: 100dvh; /* Mobile friendly full height */
+    min-height: 100dvh;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Soft Golden Gradient */
-    background: radial-gradient(circle at center, var(--bg-gradient-start), var(--bg-gradient-end));
     padding: 20px;
     box-sizing: border-box;
+    background: transparent;
+    position: relative;
+    z-index: 1;
 }
 
-/* 2. The Card Container */
+/* 3. The Card - SMOKED GLASS */
 .welcome-card {
     background-color: var(--card-bg);
+
+    /* Heavy blur */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
     width: 100%;
-    max-width: 380px; /* Limits width on desktop */
-    border-radius: 20px;
-    padding: 2.5rem 2rem;
-    box-shadow: 0 10px 30px rgba(62, 59, 50, 0.15); /* Soft shadow */
+    max-width: 400px;
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+
+    border: 1px solid var(--card-border);
+
+    /* Deep, invisible shadow to blend with black */
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+
     display: flex;
     flex-direction: column;
     gap: 2rem;
-}
-
-/* 3. Header & Typography */
-.welcome-header {
     text-align: center;
+    transition: transform 0.5s ease;
 }
 
+/* 4. Typography - TITLE UPDATED FOR THIN LUXURY LOOK */
 .welcome-header h1 {
-    font-family: sans-serif; /* Use a clean font */
+    font-family: sans-serif;
     font-size: 1.5rem;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     color: var(--text-primary);
-    margin: 0 0 0.5rem 0;
-    font-weight: 500;
+    margin: 0 0 0.75rem 0;
+    font-weight: 300; /* CHANGED: Thin/Light weight for luxury */
     text-transform: uppercase;
+    opacity: 0.95;
 }
 
 .welcome-header p {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: var(--text-secondary);
     margin: 0;
+    line-height: 1.6;
+    font-weight: 300;
 }
 
-/* 4. Form Layout */
+/* 5. Form Layout */
 .welcome-form-wrapper form {
     display: flex;
     flex-direction: column;
@@ -77,78 +107,88 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    text-align: left;
 }
 
-/* 5. Labels & Inputs */
-.welcome-label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #8C8678;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-left: 2px;
-}
-
+/* 6. Inputs */
 .welcome-input {
     width: 100%;
-    padding: 0.8rem 1rem;
+    padding: 1rem 1.2rem;
     font-size: 1rem;
+
     background-color: var(--input-bg);
     border: 1px solid var(--input-border);
-    border-radius: 8px; /* Slightly rounded inputs */
+    border-radius: 12px;
+
     color: var(--text-primary);
     box-sizing: border-box;
     outline: none;
-    transition: border-color 0.2s;
+    transition: all 0.4s ease;
 }
 
 .welcome-input:focus {
-    border-color: var(--btn-primary);
+    border-color: var(--input-focus);
+    background-color: rgba(255,255,255,0.05);
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.1);
 }
 
 .welcome-input::placeholder {
-    color: #B0ACA2;
-    font-weight: 400;
+    color: var(--text-muted);
+    font-weight: 300;
+    letter-spacing: 0.5px;
 }
 
-/* 6. Buttons Area */
+/* 7. Buttons */
 .welcome-buttons-container {
     display: flex;
     gap: 1rem;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
 }
 
 .welcome-button {
     flex: 1;
-    padding: 0.9rem;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 700;
+    padding: 1rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
     text-align: center;
     cursor: pointer;
     text-decoration: none;
-    transition: opacity 0.2s, transform 0.1s;
+    transition: all 0.3s ease;
     border: 1px solid transparent;
-    display: flex;             /* Ensure proper centering */
-    justify-content: center;   /* Center text horizontally */
-    align-items: center;       /* Center text vertically */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .welcome-button:active {
     transform: scale(0.98);
 }
 
-/* Sign Up (Outline) */
 .outline-button {
     background-color: transparent;
     border-color: var(--btn-outline-border);
     color: var(--btn-outline-text);
+    opacity: 0.7;
 }
 
-/* Log In (Solid) */
+.outline-button:hover {
+    opacity: 1;
+    border-color: var(--text-primary);
+    background-color: rgba(255,255,255,0.05);
+}
+
 .solid-button {
     background-color: var(--btn-primary);
-    color: var(--btn-text-on-primary);
+    color: var(--btn-text);
     border: none;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.solid-button:hover {
+    background-color: #D4B875;
+    transform: translateY(-2px);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.4);
 }
