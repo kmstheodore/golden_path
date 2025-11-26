@@ -1,17 +1,51 @@
-<h1>Setup Notifications</h1>
-<p>To use Golden Path, please register this device for notifications.</p>
+<%# 1. Load the specific welcome styles %>
+<% content_for :head do %>
+  <%= stylesheet_link_tag "welcome", "data-turbo-track": "reload" %>
+<% end %>
 
-<div data-controller="push-subscription" class="subscription-box" style="margin-top: 20px; border: 1px solid #ccc; padding: 20px;">
-  <h3>Enable Notifications</h3>
-  <p data-push-subscription-target="status">Status: Checking...</p>
+<div id="welcome-div">
+  <div id="welcome-title">
+    <h1>Setup Notifications</h1>
+  </div>
 
-  <input type="text" data-push-subscription-target="device" placeholder="Device Name (e.g. My MacBook)" style="padding: 5px;">
+  <%# 2. Main Container %>
+  <div id="welcome-form">
 
-  <button data-action="click->push-subscription#subscribe" data-push-subscription-target="button" style="padding: 5px 10px;">
-    Subscribe Device
-  </button>
+    <%# Description text styled to match the theme %>
+    <p style="text-align: center; color: var(--platinum); margin-bottom: 20px; font-size: 1.1rem;">
+      To use Golden Path, please register this device for notifications.
+    </p>
 
-  <div style="margin-top: 20px;">
-    <%= link_to "Continue to Dashboard", root_path %>
+    <%# 3. Stimulus Controller Container %>
+    <div data-controller="push-subscription"
+         data-push-subscription-redirect-url-value="<%= authenticated_root_path %>"
+         style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
+
+      <%# Status Message %>
+      <p data-push-subscription-target="status" style="text-align: center; color: var(--gilded-gold); margin: 0; font-weight: bold;">
+        Status: Checking browser...
+      </p>
+
+      <%# Device Input %>
+      <input type="text"
+             data-push-subscription-target="device"
+             class="welcome-input"
+             placeholder="Device Name (e.g. My MacBook)">
+
+      <%# 4. Buttons Side-by-Side %>
+      <div class="welcome-buttons-container">
+        <%# Primary Action: Subscribe %>
+        <button data-action="click->push-subscription#subscribe"
+                data-push-subscription-target="button"
+                class="welcome-button">
+          Subscribe Device
+        </button>
+
+        <%# Secondary Action: Skip / Dashboard %>
+        <%# We use 'secondary-button' to give it the outlined look %>
+        <%= link_to "Dashboard", authenticated_root_path, class: "welcome-button secondary-button", style: "display: flex; justify-content: center; align-items: center;" %>
+      </div>
+
+    </div>
   </div>
 </div>
