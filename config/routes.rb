@@ -3,12 +3,12 @@ Rails.application.routes.draw do
 
   # If the user is logged in, the root path is the home dashboard
   authenticated :user do
-    root "pages#home", as: :authenticated_root
+    root "pages#home" # REMOVED: as: :authenticated_root
   end
 
   # If the user is NOT logged in, the root path is the welcome page
   unauthenticated do
-    root "pages#welcome", as: :unauthenticated_root
+    root "pages#welcome" # REMOVED: as: :unauthenticated_root
   end
   get "paths/index"
   get "paths/new"
