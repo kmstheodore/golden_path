@@ -1,123 +1,154 @@
 /* app/assets/stylesheets/welcome.css */
 
 :root {
-    --rich-black: #0F0F0F;
-    --gilded-gold: #D4AF37;
-    --platinum: #E5E4E2;
-    --charcoal: #2C2C2C;
-    --alabaster: #F5F5F5;
+    /* Design System extracted from image */
+    --bg-gradient-start: #D8C076; /* Lighter Gold */
+    --bg-gradient-end:   #A68B4B; /* Darker Gold/Brown */
+
+    --card-bg:       #F3F0EB; /* Creamy Off-White */
+    --text-primary:  #3E3B32; /* Dark Brown-Grey */
+    --text-secondary:#7A7669; /* Muted Grey for subtitle */
+
+    --input-border:  #9D988C;
+    --input-bg:      #FCFAF7;
+
+    --btn-primary:   #D4AF37; /* Mustard Gold */
+    --btn-text-on-primary: #FFFFFF;
+
+    --btn-outline-border: #8C877D;
+    --btn-outline-text:   #6D685A;
 }
 
-#welcome-div {
-    height: 100dvh;
+/* 1. The Screen Background */
+#welcome-screen {
+    min-height: 100dvh; /* Mobile friendly full height */
+    width: 100%;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
+    /* Soft Golden Gradient */
+    background: radial-gradient(circle at center, var(--bg-gradient-start), var(--bg-gradient-end));
     padding: 20px;
-    background-color: var(--rich-black);
-    color: var(--alabaster);
+    box-sizing: border-box;
 }
 
-#welcome-title {
-    margin-bottom: 3rem;
-    text-align: center;
+/* 2. The Card Container */
+.welcome-card {
+    background-color: var(--card-bg);
     width: 100%;
-}
-
-#welcome-title h1 {
-    font-size: 2.5rem;
-    margin: 0;
-    color: var(--platinum);
-    font-weight: 800;
-    letter-spacing: 1px;
-}
-
-/* Wrapper controls the width on the page */
-#welcome-form {
-    width: 90%;
-    max-width: 500px;
-}
-
-/* THE FIX: Target the form tag directly to apply spacing between inputs */
-#welcome-form form {
+    max-width: 380px; /* Limits width on desktop */
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 10px 30px rgba(62, 59, 50, 0.15); /* Soft shadow */
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* This adds the space between Email, Password, and Buttons */
-    width: 100%;
+    gap: 2rem;
 }
 
-/* INPUT FIELDS */
+/* 3. Header & Typography */
+.welcome-header {
+    text-align: center;
+}
+
+.welcome-header h1 {
+    font-family: sans-serif; /* Use a clean font */
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.welcome-header p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* 4. Form Layout */
+.welcome-form-wrapper form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* 5. Labels & Inputs */
+.welcome-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #8C8678;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-left: 2px;
+}
+
 .welcome-input {
     width: 100%;
-    padding: 1rem 1.25rem;
-    background-color: var(--charcoal);
-    border: 1px solid var(--platinum);
-    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 8px; /* Slightly rounded inputs */
+    color: var(--text-primary);
     box-sizing: border-box;
-    color: var(--alabaster);
-    font-size: 1.2rem;
-    height: auto;
-    appearance: none;
     outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.welcome-input::placeholder {
-    color: var(--platinum);
-    opacity: 0.6;
+    transition: border-color 0.2s;
 }
 
 .welcome-input:focus {
-    border-color: var(--gilded-gold);
-    box-shadow: 0 0 0 1px var(--gilded-gold);
+    border-color: var(--btn-primary);
 }
 
-/* BUTTON CONTAINER */
+.welcome-input::placeholder {
+    color: #B0ACA2;
+    font-weight: 400;
+}
+
+/* 6. Buttons Area */
 .welcome-buttons-container {
     display: flex;
-    gap: 15px;
-    width: 100%;
-    /* Removed margin-top since the form gap now handles vertical spacing */
+    gap: 1rem;
+    margin-top: 1rem;
 }
 
-/* SHARED BUTTON STYLES */
 .welcome-button {
     flex: 1;
-    padding: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 12px;
+    padding: 0.9rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
     cursor: pointer;
     text-decoration: none;
-    font-size: 1.1rem;
-    font-weight: 700;
-    border: 2px solid transparent;
-    transition: all 0.2s ease;
+    transition: opacity 0.2s, transform 0.1s;
+    border: 1px solid transparent;
+    display: flex;             /* Ensure proper centering */
+    justify-content: center;   /* Center text horizontally */
+    align-items: center;       /* Center text vertically */
 }
 
 .welcome-button:active {
-    transform: scale(0.96);
+    transform: scale(0.98);
 }
 
-/* PRIMARY BUTTON (Log In) */
-.welcome-button:not(.secondary-button) {
-    background-color: var(--gilded-gold);
-    color: var(--rich-black);
-}
-
-.welcome-button:not(.secondary-button):hover {
-    opacity: 0.9;
-}
-
-/* SECONDARY BUTTON (Sign Up) - Outlined */
-.secondary-button {
+/* Sign Up (Outline) */
+.outline-button {
     background-color: transparent;
-    border-color: var(--gilded-gold);
-    color: var(--gilded-gold);
+    border-color: var(--btn-outline-border);
+    color: var(--btn-outline-text);
 }
 
-.secondary-button:hover {
-    background-color: rgba(212, 175, 55, 0.1);
+/* Log In (Solid) */
+.solid-button {
+    background-color: var(--btn-primary);
+    color: var(--btn-text-on-primary);
+    border: none;
 }

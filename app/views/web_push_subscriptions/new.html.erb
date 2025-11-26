@@ -1,51 +1,63 @@
-<%# 1. Load the specific welcome styles %>
+<%# app/views/web_push_subscriptions/new.html.erb %>
+
+<%# 1. Reuse the welcome styles %>
 <% content_for :head do %>
   <%= stylesheet_link_tag "welcome", "data-turbo-track": "reload" %>
 <% end %>
 
-<div id="welcome-div">
-  <div id="welcome-title">
-    <h1>Setup Notifications</h1>
-  </div>
+<div id="welcome-screen">
+  <div class="welcome-card">
 
-  <%# 2. Main Container %>
-  <div id="welcome-form">
-
-    <%# Description text styled to match the theme %>
-    <p style="text-align: center; color: var(--platinum); margin-bottom: 20px; font-size: 1.1rem;">
-      To use Golden Path, please register this device for notifications.
-    </p>
-
-    <%# 3. Stimulus Controller Container %>
-    <div data-controller="push-subscription"
-         data-push-subscription-redirect-url-value="<%= authenticated_root_path %>"
-         style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%;">
-
-      <%# Status Message %>
-      <p data-push-subscription-target="status" style="text-align: center; color: var(--gilded-gold); margin: 0; font-weight: bold;">
-        Status: Checking browser...
-      </p>
-
-      <%# Device Input %>
-      <input type="text"
-             data-push-subscription-target="device"
-             class="welcome-input"
-             placeholder="Device Name (e.g. My MacBook)">
-
-      <%# 4. Buttons Side-by-Side %>
-      <div class="welcome-buttons-container">
-        <%# Primary Action: Subscribe %>
-        <button data-action="click->push-subscription#subscribe"
-                data-push-subscription-target="button"
-                class="welcome-button">
-          Subscribe Device
-        </button>
-
-        <%# Secondary Action: Skip / Dashboard %>
-        <%# We use 'secondary-button' to give it the outlined look %>
-        <%= link_to "Dashboard", authenticated_root_path, class: "welcome-button secondary-button", style: "display: flex; justify-content: center; align-items: center;" %>
-      </div>
-
+    <div class="welcome-header">
+      <h1>GOLDEN PATH</h1>
+      <p>Enable Notifications</p>
     </div>
+
+    <%# 2. Main Container acting as the "Form" wrapper %>
+    <div class="welcome-form-wrapper">
+
+      <%# 3. Stimulus Controller Container %>
+      <%# We treat this div like the form element in the other views %>
+      <div data-controller="push-subscription"
+           data-push-subscription-redirect-url-value="<%= authenticated_root_path %>"
+           style="display: flex; flex-direction: column; gap: 1.25rem; width: 100%;">
+
+        <%# Description / Status %>
+        <div style="text-align: center;">
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            To use Golden Path, please register this device.
+          </p>
+
+          <%# Status Message - Updated color to match theme %>
+          <p data-push-subscription-target="status"
+             style="color: var(--btn-primary); font-weight: 700; font-size: 0.9rem; margin: 0;">
+            Status: Checking browser...
+          </p>
+        </div>
+
+        <%# Device Input %>
+        <div class="form-group">
+          <input type="text"
+                 data-push-subscription-target="device"
+                 class="welcome-input"
+                 placeholder="Device Name (e.g. My MacBook)">
+        </div>
+
+        <%# 4. Buttons %>
+        <div class="welcome-buttons-container">
+          <%# Primary Action: Subscribe %>
+          <button data-action="click->push-subscription#subscribe"
+                  data-push-subscription-target="button"
+                  class="welcome-button solid-button">
+            SUBSCRIBE
+          </button>
+
+          <%# Secondary Action: Skip / Dashboard %>
+          <%= link_to "DASHBOARD", authenticated_root_path, class: "welcome-button outline-button" %>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </div>

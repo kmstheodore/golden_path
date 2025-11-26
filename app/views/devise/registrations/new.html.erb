@@ -1,51 +1,59 @@
-<%# 1. Reuse the specific CSS file for consistency %>
+<%# app/views/devise/registrations/new.html.erb %>
+
+<%# Reuse the welcome styles explicitly if not globally included %>
 <% content_for :head do %>
   <%= stylesheet_link_tag "welcome", "data-turbo-track": "reload" %>
 <% end %>
 
-<div id="welcome-div">
-  <div id="welcome-title">
-    <h1>Join Golden Path</h1>
-  </div>
+<div id="welcome-screen">
+  <div class="welcome-card">
 
-  <div id="welcome-form">
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), data: { turbo: false }) do |f| %>
+    <div class="welcome-header">
+      <h1>GOLDEN PATH</h1>
+      <p>The Path is better together.</p>
+    </div>
 
-      <%= render "devise/shared/error_messages", resource: resource %>
+    <div class="welcome-form-wrapper">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), data: { turbo: false }) do |f| %>
 
-      <div class="field">
-        <%= f.email_field :email,
-                          autofocus: true,
-                          autocomplete: "email",
-                          placeholder: "Email",
-                          required: true,
-                          class: "welcome-input" %>
-      </div>
+        <%# Error messages will appear at the top of the form if any %>
+        <%= render "devise/shared/error_messages", resource: resource %>
 
-      <div class="field">
-        <%= f.password_field :password,
-                             autocomplete: "new-password",
-                             placeholder: "Password (#{@minimum_password_length} characters minimum)",
-                             required: true,
-                             class: "welcome-input" %>
-      </div>
+        <div class="form-group">
+          <%= f.email_field :email,
+                            autofocus: true,
+                            autocomplete: "email",
+                            placeholder: "Email",
+                            required: true,
+                            class: "welcome-input" %>
+        </div>
 
-      <div class="field">
-        <%= f.password_field :password_confirmation,
-                             autocomplete: "new-password",
-                             placeholder: "Confirm Password",
-                             required: true,
-                             class: "welcome-input" %>
-      </div>
+        <div class="form-group">
+          <%= f.password_field :password,
+                               autocomplete: "new-password",
+                               placeholder: "Password (#{@minimum_password_length} char min)",
+                               required: true,
+                               class: "welcome-input" %>
+        </div>
 
-      <div class="welcome-buttons-container">
-        <%= f.submit "Sign up", class: "welcome-button" %>
-      </div>
+        <div class="form-group">
+          <%= f.password_field :password_confirmation,
+                               autocomplete: "new-password",
+                               placeholder: "Confirm Password",
+                               required: true,
+                               class: "welcome-input" %>
+        </div>
 
-      <div style="text-align: center; margin-top: 15px;">
-        <%= link_to "Already have an account?", new_session_path(resource_name), style: "color: var(--platinum); text-decoration: underline;" %>
-      </div>
+        <div class="welcome-buttons-container">
+          <%# Sign Up (Primary Action) %>
+          <%= f.submit "SIGN UP", class: "welcome-button solid-button" %>
 
-    <% end %>
+          <%# Log In (Secondary/Back) %>
+          <%= link_to "LOG IN", new_session_path(resource_name), class: "welcome-button outline-button" %>
+        </div>
+
+      <% end %>
+    </div>
+
   </div>
 </div>
