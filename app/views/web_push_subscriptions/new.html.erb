@@ -1,0 +1,17 @@
+<h1>Setup Notifications</h1>
+<p>To use Golden Path, please register this device for notifications.</p>
+
+<div data-controller="push-subscription" class="subscription-box" style="margin-top: 20px; border: 1px solid #ccc; padding: 20px;">
+  <h3>Enable Notifications</h3>
+  <p data-push-subscription-target="status">Status: Checking...</p>
+
+  <input type="text" data-push-subscription-target="device" placeholder="Device Name (e.g. My MacBook)" style="padding: 5px;">
+
+  <button data-action="click->push-subscription#subscribe" data-push-subscription-target="button" style="padding: 5px 10px;">
+    Subscribe Device
+  </button>
+
+  <div style="margin-top: 20px;">
+    <%= link_to "Continue to Dashboard", root_path %>
+  </div>
+</div>

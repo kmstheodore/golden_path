@@ -4,10 +4,11 @@ export default class extends Controller {
     static targets = ["device", "button", "status"]
 
     connect() {
+        // CHANGED: Removed the logic that disabled buttons on load.
+        // We always want to allow the user to click "Subscribe" to sync
+        // with the backend, even if the browser already has permission.
         if (Notification.permission === "granted") {
-            this.statusTarget.textContent = "✅ Notifications Enabled"
-            this.buttonTarget.disabled = true
-            this.deviceTarget.disabled = true
+            this.statusTarget.textContent = "✅ Browser permission granted. Click below to save."
         }
     }
 
@@ -19,10 +20,15 @@ export default class extends Controller {
             return
         }
 
-        // 1. Request Permission
+        this.buttonTarget.disabled = true
+        this.statusTarget.textContent = "⏳ Subscribing..."
+
+        // 1. Request Permission (resolves instantly if already granted)
         const permission = await Notification.requestPermission()
         if (permission !== "granted") {
             alert("Permission denied")
+            this.buttonTarget.disabled = false
+            this.statusTarget.textContent = "❌ Permission denied"
             return
         }
 
@@ -30,7 +36,6 @@ export default class extends Controller {
         const vapidPublicKey = document.head.querySelector("meta[name='vapid-public-key']").content
         const convertedKey = this.urlBase64ToUint8Array(vapidPublicKey)
 
-        // Wait for the service worker to be ready
         const registration = await navigator.serviceWorker.ready
 
         const subscription = await registration.pushManager.subscribe({
@@ -52,14 +57,17 @@ export default class extends Controller {
         })
 
         if (response.ok) {
-            this.statusTarget.textContent = "✅ Subscribed successfully!"
-            this.buttonTarget.disabled = true
+            this.statusTarget.textContent = "✅ Success! Redirecting..."
+            // CHANGED: Automatically send them to the dashboard
+            window.location.href = "/"
         } else {
             alert("Failed to save subscription on server.")
+            this.buttonTarget.disabled = false
+            this.statusTarget.textContent = "❌ Server Error. Try again."
         }
     }
 
-    // Helper to convert VAPID key
+    // (Helper remains unchanged)
     urlBase64ToUint8Array(base64String) {
         const padding = "=".repeat((4 - base64String.length % 4) % 4)
         const base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/")

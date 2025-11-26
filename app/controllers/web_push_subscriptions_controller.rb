@@ -1,5 +1,8 @@
 class WebPushSubscriptionsController < ApplicationController
   before_action :authenticate_user! # Ensure only logged-in users can subscribe
+  def new
+
+  end
   def test
     @subscription = current_user.web_push_subscriptions.find(params[:id])
 
