@@ -1,15 +1,15 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  # If the user is logged in, the root path is the home dashboard
+  # 1. If the user is logged in, send them to the dashboard.
+  # We give this a distinct name (as: :authenticated_root) to prevent the naming conflict.
   authenticated :user do
-    root "pages#home" # REMOVED: as: :authenticated_root
+    root "pages#home", as: :authenticated_root
   end
 
-  # If the user is NOT logged in, the root path is the welcome page
-  unauthenticated do
-    root "pages#welcome" # REMOVED: as: :unauthenticated_root
-  end
+  # 2. For everyone else (guests), send them to the welcome page.
+  # This defines the standard 'root_path' helper that your views are looking for.
+  root "pages#welcome"
   get "paths/index"
   get "paths/new"
   get "paths/create"
