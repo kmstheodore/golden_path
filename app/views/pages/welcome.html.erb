@@ -1,26 +1,37 @@
 <div id="welcome-div">
-  <div id="welcome-title"><h1>The Golden Path</h1></div>
-    <div id="welcome-form">
+  <div id="welcome-title">
+    <h1>The Golden Path</h1>
+  </div>
+
+  <div id="welcome-form">
     <%= form_with(scope: :user, url: session_path(:user), data: { turbo: false }) do |f| %>
-      <div id="welcome-log-in">
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email", required: true %>
+
+      <div class="form-group">
+        <%= f.email_field :email,
+                          autofocus: true,
+                          autocomplete: "email",
+                          placeholder: "Email",
+                          required: true,
+                          class: "welcome-input" %>
       </div>
 
-      <div id="welcome-password">
-        <%= f.password_field :password, autocomplete: "current-password", placeholder: "Password", required: true %>
+      <div class="form-group">
+        <%= f.password_field :password,
+                             autocomplete: "current-password",
+                             placeholder: "Password",
+                             required: true,
+                             class: "welcome-input" %>
       </div>
 
-        <% if devise_mapping.rememberable? %>
-          <%= f.hidden_field :remember_me, value: true %>
-        <% end %>
+      <% if devise_mapping.rememberable? %>
+        <%= f.hidden_field :remember_me, value: true %>
+      <% end %>
 
-    <div id=welcome-log-in>
-      <%= f.submit "Log in" %>
-    </div>
-  <% end %>
-    </div>
+      <div class="welcome-buttons-container">
+        <%= f.submit "Log in", class: "welcome-button" %>
+        <%= link_to "Sign up", new_user_registration_path, class: "welcome-button secondary-button" %>
+      </div>
 
-  <div id=welcome-sign-up">
-    <%= button_to "Sign up", new_user_registration_path, method: :get, class: "button" %>
+    <% end %>
   </div>
 </div>

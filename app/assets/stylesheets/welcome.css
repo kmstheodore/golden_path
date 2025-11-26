@@ -1,22 +1,109 @@
+/* app/assets/stylesheets/welcome.css */
+
 #welcome-div {
-    height: 100%;
+    height: 100dvh; /* Dynamic viewport height */
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9;
 }
 
 #welcome-title {
-    height: 30%;
+    margin-bottom: 3rem; /* More space under title */
     text-align: center;
+    width: 100%;
+}
+
+#welcome-title h1 {
+    font-size: 2.5rem; /* Much larger title */
+    margin: 0;
+    color: #333;
+    font-weight: 800; /* Bolder text */
 }
 
 #welcome-form {
     display: flex;
-    align-items: center;
     flex-direction: column;
-    height: 30%;
+    width: 90%; /* Take up 90% of screen width on mobile */
+    max-width: 500px; /* Cap it slightly wider on desktop */
+    gap: 1.5rem; /* More space between inputs */
 }
 
-#welcome-log-in-or-sign-up {
-    display: flex;
+/* BIGGER INPUTS */
+.welcome-input {
+    width: 100%;
+    padding: 1rem 1.25rem; /* Taller and wider padding */
+    border: 1px solid #ccc;
+    border-radius: 12px; /* Rounder corners */
+    box-sizing: border-box;
+    font-size: 1.2rem; /* Larger text (approx 19px) */
+    height: auto; /* Let padding define height */
+    appearance: none;
+    background-color: #fff;
 }
+
+.welcome-input:focus {
+    outline: 2px solid #333;
+    border-color: transparent;
+}
+
+.welcome-buttons-container {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* BIGGER BUTTONS */
+.welcome-button {
+    flex: 1;
+    padding: 1rem; /* Taller buttons */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    font-size: 1.1rem; /* Larger button text */
+    font-weight: 700;
+
+    /* Default (Log in) Style */
+    background-color: #333;
+    color: white;
+    transition: transform 0.1s ease;
+}
+
+.welcome-button:active {
+    transform: scale(0.96);
+}
+
+/* Secondary Style (Sign Up) */
+.secondary-button {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+/* Dark Mode Adjustments */
+@media (prefers-color-scheme: dark) {
+    #welcome-div { background-color: #000; } /* Pure black background */
+    #welcome-title h1 { color: #fff; }
+
+    .welcome-input {
+        background-color: #1c1c1e; /* Dark grey input background */
+        border-color: #333;
+        color: white;
+    }
+
+    .welcome-input::placeholder {
+        color: #888;
+    }
+
+    .secondary-button {
+        background-color: #333;
+        color: #fff;
+    }
+
+    .welcome-button:not(.secondary-button) {
