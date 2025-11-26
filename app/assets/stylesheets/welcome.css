@@ -1,109 +1,123 @@
 /* app/assets/stylesheets/welcome.css */
 
+:root {
+    --rich-black: #0F0F0F;
+    --gilded-gold: #D4AF37;
+    --platinum: #E5E4E2;
+    --charcoal: #2C2C2C;
+    --alabaster: #F5F5F5;
+}
+
 #welcome-div {
-    height: 100dvh; /* Dynamic viewport height */
+    height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: var(--rich-black);
+    color: var(--alabaster);
 }
 
 #welcome-title {
-    margin-bottom: 3rem; /* More space under title */
+    margin-bottom: 3rem;
     text-align: center;
     width: 100%;
 }
 
 #welcome-title h1 {
-    font-size: 2.5rem; /* Much larger title */
+    font-size: 2.5rem;
     margin: 0;
-    color: #333;
-    font-weight: 800; /* Bolder text */
+    color: var(--platinum);
+    font-weight: 800;
+    letter-spacing: 1px;
 }
 
+/* Wrapper controls the width on the page */
 #welcome-form {
+    width: 90%;
+    max-width: 500px;
+}
+
+/* THE FIX: Target the form tag directly to apply spacing between inputs */
+#welcome-form form {
     display: flex;
     flex-direction: column;
-    width: 90%; /* Take up 90% of screen width on mobile */
-    max-width: 500px; /* Cap it slightly wider on desktop */
-    gap: 1.5rem; /* More space between inputs */
+    gap: 1.5rem; /* This adds the space between Email, Password, and Buttons */
+    width: 100%;
 }
 
-/* BIGGER INPUTS */
+/* INPUT FIELDS */
 .welcome-input {
     width: 100%;
-    padding: 1rem 1.25rem; /* Taller and wider padding */
-    border: 1px solid #ccc;
-    border-radius: 12px; /* Rounder corners */
+    padding: 1rem 1.25rem;
+    background-color: var(--charcoal);
+    border: 1px solid var(--platinum);
+    border-radius: 12px;
     box-sizing: border-box;
-    font-size: 1.2rem; /* Larger text (approx 19px) */
-    height: auto; /* Let padding define height */
+    color: var(--alabaster);
+    font-size: 1.2rem;
+    height: auto;
     appearance: none;
-    background-color: #fff;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.welcome-input::placeholder {
+    color: var(--platinum);
+    opacity: 0.6;
 }
 
 .welcome-input:focus {
-    outline: 2px solid #333;
-    border-color: transparent;
+    border-color: var(--gilded-gold);
+    box-shadow: 0 0 0 1px var(--gilded-gold);
 }
 
+/* BUTTON CONTAINER */
 .welcome-buttons-container {
     display: flex;
     gap: 15px;
     width: 100%;
-    margin-top: 10px;
+    /* Removed margin-top since the form gap now handles vertical spacing */
 }
 
-/* BIGGER BUTTONS */
+/* SHARED BUTTON STYLES */
 .welcome-button {
     flex: 1;
-    padding: 1rem; /* Taller buttons */
+    padding: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 12px;
     cursor: pointer;
-    border: none;
     text-decoration: none;
-    font-size: 1.1rem; /* Larger button text */
+    font-size: 1.1rem;
     font-weight: 700;
-
-    /* Default (Log in) Style */
-    background-color: #333;
-    color: white;
-    transition: transform 0.1s ease;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
 }
 
 .welcome-button:active {
     transform: scale(0.96);
 }
 
-/* Secondary Style (Sign Up) */
-.secondary-button {
-    background-color: #e0e0e0;
-    color: #333;
+/* PRIMARY BUTTON (Log In) */
+.welcome-button:not(.secondary-button) {
+    background-color: var(--gilded-gold);
+    color: var(--rich-black);
 }
 
-/* Dark Mode Adjustments */
-@media (prefers-color-scheme: dark) {
-    #welcome-div { background-color: #000; } /* Pure black background */
-    #welcome-title h1 { color: #fff; }
+.welcome-button:not(.secondary-button):hover {
+    opacity: 0.9;
+}
 
-    .welcome-input {
-        background-color: #1c1c1e; /* Dark grey input background */
-        border-color: #333;
-        color: white;
-    }
+/* SECONDARY BUTTON (Sign Up) - Outlined */
+.secondary-button {
+    background-color: transparent;
+    border-color: var(--gilded-gold);
+    color: var(--gilded-gold);
+}
 
-    .welcome-input::placeholder {
-        color: #888;
-    }
-
-    .secondary-button {
-        background-color: #333;
-        color: #fff;
-    }
-
-    .welcome-button:not(.secondary-button) {
+.secondary-button:hover {
+    background-color: rgba(212, 175, 55, 0.1);
+}
