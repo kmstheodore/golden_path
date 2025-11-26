@@ -1,0 +1,51 @@
+<%# 1. Reuse the specific CSS file for consistency %>
+<% content_for :head do %>
+  <%= stylesheet_link_tag "welcome", "data-turbo-track": "reload" %>
+<% end %>
+
+<div id="welcome-div">
+  <div id="welcome-title">
+    <h1>Join Golden Path</h1>
+  </div>
+
+  <div id="welcome-form">
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), data: { turbo: false }) do |f| %>
+
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <div class="field">
+        <%= f.email_field :email,
+                          autofocus: true,
+                          autocomplete: "email",
+                          placeholder: "Email",
+                          required: true,
+                          class: "welcome-input" %>
+      </div>
+
+      <div class="field">
+        <%= f.password_field :password,
+                             autocomplete: "new-password",
+                             placeholder: "Password (#{@minimum_password_length} characters minimum)",
+                             required: true,
+                             class: "welcome-input" %>
+      </div>
+
+      <div class="field">
+        <%= f.password_field :password_confirmation,
+                             autocomplete: "new-password",
+                             placeholder: "Confirm Password",
+                             required: true,
+                             class: "welcome-input" %>
+      </div>
+
+      <div class="welcome-buttons-container">
+        <%= f.submit "Sign up", class: "welcome-button" %>
+      </div>
+
+      <div style="text-align: center; margin-top: 15px;">
+        <%= link_to "Already have an account?", new_session_path(resource_name), style: "color: var(--platinum); text-decoration: underline;" %>
+      </div>
+
+    <% end %>
+  </div>
+</div>
