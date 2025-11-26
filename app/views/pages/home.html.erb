@@ -1,16 +1,3 @@
-<h1>Home page</h1>
-
-
-<% if current_user.web_push_subscriptions.any? %>
-  <hr>
-  <h3>Your Devices</h3>
-  <ul>
-    <% current_user.web_push_subscriptions.each do |sub| %>
-      <li>
-        <strong><%= sub.device_name %></strong>
-        <%= button_to "Send Test Push", test_web_push_subscription_path(sub), method: :post %>
-        <%= link_to "New Path", new_path_path %>
-      </li>
-    <% end %>
-  </ul>
+<%= @paths.each do |path| %>
+  <% path.name %>
 <% end %>
