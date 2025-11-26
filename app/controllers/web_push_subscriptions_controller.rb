@@ -9,11 +9,12 @@ class WebPushSubscriptionsController < ApplicationController
     message = {
       title: "Test Notification",
       body: "It works! Hello from Rails 8.",
-      path: "/paths" # Optional: where clicking takes the user
+      path: "/paths"
     }
 
     begin
-      WebPush.payload_send(
+      # CHANGED: WebPush -> Webpush
+      Webpush.payload_send(
         message: JSON.generate(message),
         endpoint: @subscription.endpoint,
         p256dh: @subscription.p256dh,
@@ -25,7 +26,8 @@ class WebPushSubscriptionsController < ApplicationController
         }
       )
       flash[:notice] = "Notification sent!"
-    rescue WebPush::InvalidSubscription => e
+      # CHANGED: WebPush -> Webpush
+    rescue Webpush::InvalidSubscription => e
       @subscription.destroy
       flash[:alert] = "Subscription invalid - removed."
     rescue => e
