@@ -1,12 +1,12 @@
-<div style="height: 100%; display: flex; flex-direction: column;">
-  <div><h1>The Golden Path</h1></div>
-    <div style="display: flex; flex-direction: column">
+<div id="welcome-div">
+  <div id="welcome-title"><h1>The Golden Path</h1></div>
+    <div id="welcome-form">
     <%= form_with(scope: :user, url: session_path(:user), data: { turbo: false }) do |f| %>
-      <div>
+      <div id="welcome-log-in">
         <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email", required: true %>
       </div>
 
-      <div>
+      <div id="welcome-password">
         <%= f.password_field :password, autocomplete: "current-password", placeholder: "Password", required: true %>
       </div>
 
@@ -14,14 +14,13 @@
           <%= f.hidden_field :remember_me, value: true %>
         <% end %>
 
-    <div>
+    <div id=welcome-log-in>
       <%= f.submit "Log in" %>
     </div>
   <% end %>
     </div>
 
-
-  <p>
-    <%= link_to "Sign up now", new_user_registration_path, class: "button" %>
-  </p>
+  <div id=welcome-sign-up">
+    <%= button_to "Sign up", new_user_registration_path, method: :get, class: "button" %>
+  </div>
 </div>
