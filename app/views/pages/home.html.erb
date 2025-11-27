@@ -4,17 +4,37 @@
   <%= stylesheet_link_tag "welcome", "data-turbo-track": "reload" %>
   <style>
       /* Custom styles for the home view within the theme */
+      .welcome-card {
+          /* 1. Use Flexbox to manage space for fixed header/footer and scrollable content */
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          max-height: 90vh; /* Limits the card height to prevent screen overflow */
+          padding: 2rem 1.5rem; /* Ensure consistent internal padding */
+      }
+
+      .path-scroll-container {
+          /* 2. Takes up all available vertical space in the card (Flex Grow) */
+          flex-grow: 1;
+          /* 3. Enables vertical scrolling when content exceeds container size */
+          overflow-y: auto;
+          margin-top: 20px; /* Space from the 'New Path' button */
+
+          /* Optional: Add space for the scrollbar to prevent overlapping with content */
+          padding-right: 15px;
+      }
+
+      /* List item styles */
       .path-list {
           display: flex;
           flex-direction: column;
           gap: 15px;
-          margin-top: 20px;
       }
       .path-item {
           padding: 15px;
           border: 1px solid var(--card-border);
           border-radius: 4px;
-          background-color: rgba(0, 0, 0, 0.2); /* Slight darker background for list item */
+          background-color: rgba(0, 0, 0, 0.2);
           text-align: left;
       }
       .path-item strong {
@@ -46,36 +66,42 @@
 <canvas id="particle-canvas" data-controller="welcome-background"></canvas>
 
 <div id="welcome-screen">
-  <div class="welcome-card" style="padding: 2rem 1.5rem;">
-    <h1 style="color: var(--text-primary); margin-bottom: 20px; font-size: 2.5vh;">My Golden Paths</h1>
+  <div class="welcome-card">
+    <%# Header - flex-shrink: 0 ensures it doesn't compress %>
+    <h1 style="color: var(--text-primary); margin-bottom: 20px; font-size: 2.5vh; flex-shrink: 0;">My Golden Paths</h1>
 
-    <%# New Path Button - Primary action at the top %>
-    <%= link_to "NEW PATH", new_path_path, class: "welcome-button solid-button", style: "width: 100%;" %>
+    <%# New Path Button - Fixed position at the top %>
+    <%= link_to "NEW PATH", new_path_path, class: "welcome-button solid-button", style: "width: 100%; flex-shrink: 0;" %>
 
-    <% if @paths.any? %>
-      <div class="path-list">
-        <% @paths.each do |path| %>
-          <div class="path-item">
-            <strong><%= path.name %></strong>
-            <small>Due: <%= path.strike_time.to_fs(:short) %></small>
-            <small>Device: <%= path.web_push_subscription&.device_name || "All Devices (Logic TBD)" %></small>
+    <%# === SCROLLABLE CONTAINER START === %>
+    <div class="path-scroll-container">
+      <% if @paths.any? %>
+        <div class="path-list">
+          <% @paths.each do |path| %>
+            <div class="path-item">
+              <strong><%= path.name %></strong>
+              <small>Due: <%= path.strike_time.to_fs(:short) %></small>
+              <small>Device: <%= path.web_push_subscription&.device_name || "All Devices (Logic TBD)" %></small>
 
-            <div class="path-actions">
-              <%= button_to "Delete", path_path(path),
-                            method: :delete,
-                            data: { turbo_confirm: "Are you sure you want to delete this path?" },
-                            class: "welcome-button outline-button" %>
+              <div class="path-actions">
+                <%= button_to "Delete", path_path(path),
+                              method: :delete,
+                              data: { turbo_confirm: "Are you sure you want to delete this path?" },
+                              class: "welcome-button outline-button" %>
+              </div>
             </div>
-          </div>
-        <% end %>
-      </div>
-    <% else %>
-      <p style="color: var(--text-secondary); margin-top: 20px; font-size: 0.95rem;">
-        You haven't created any paths yet. Click "NEW PATH" above to get started.
-      </p>
-    <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <p style="color: var(--text-secondary); margin-top: 20px; font-size: 0.95rem;">
+          You haven't created any paths yet. Click "NEW PATH" above to get started.
+        </p>
+      <% end %>
+    </div>
+    <%# === SCROLLABLE CONTAINER END === %>
 
-    <div style="margin-top: 30px;">
+    <%# Log Out Button - Fixed position at the bottom %>
+    <div style="margin-top: 20px; flex-shrink: 0;">
       <%= link_to "Log Out", destroy_user_session_path,
                   class: "welcome-button outline-button",
                   style: "width: 100%; opacity: 0.7;",
