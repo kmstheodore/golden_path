@@ -1,3 +1,12 @@
-<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="256" cy="256" r="256" fill="red"/>
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M45 180C110 130 50 80 110 20L145 20C90 80 150 130 95 180H45Z" fill="#F4A460"/>
+
+  <path d="M45 180C110 130 50 80 110 20L145 20C90 80 150 130 95 180H45Z" stroke="#D2691E" stroke-width="4" stroke-linejoin="round"/>
+
+  <path d="M70 180C125 130 75 80 128 20" stroke="#FFE4B5" stroke-width="3" stroke-dasharray="10 10" stroke-linecap="round"/>
+
+  <circle cx="60" cy="150" r="2" fill="#D2691E"/>
+  <circle cx="100" cy="110" r="1.5" fill="#D2691E"/>
+  <circle cx="85" cy="50" r="2" fill="#D2691E"/>
+  <circle cx="130" cy="30" r="1.5" fill="#D2691E"/>
 </svg>
