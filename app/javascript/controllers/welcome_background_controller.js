@@ -13,17 +13,17 @@ export default class extends Controller {
 
         // Configuration - OBSIDIAN PALETTE
         this.config = {
-            // UPDATED: Increased particle count by 50% (2340 * 1.5 = 3510) for a denser path
-            particleCount: 3510,
-            baseSpeed: 1.0,
-            variableSpeed: 0.8,
+            // UPDATED: Increased particle count to 6000 for wider, denser path
+            particleCount: 6000,
+            baseSpeed: 0.4,       // Slower drift
+            variableSpeed: 0.4,
             baseSize: 0.6,
             variableSize: 1.2,
             oscillationScale: 10,
-            oscillationSpeed: 0.04,
+            oscillationSpeed: 0.015,
             pathWaveAmplitude: 100,
             pathWaveFrequency: 0.005,
-            pathWaveSpeed: 0.001,
+            pathWaveSpeed: 0.0005,
             // Base colors (bronze/copper/spice)
             colors: [
                 '255, 215, 0',  // Gold
@@ -87,8 +87,8 @@ export default class extends Controller {
     }
 
     createParticle(initiallyOnScreen = false) {
-        // Spatial spread remains the same (0.075 width) to keep the path thickness consistent
-        const spread = Math.min(this.width * 0.075, 120)
+        // UPDATED: Increased spread to 15% of width (was 7.5%) and max pixels to 180 (was 120)
+        const spread = Math.min(this.width * 0.15, 180)
 
         return {
             x: 0,
@@ -121,11 +121,11 @@ export default class extends Controller {
     }
 
     drawParticle(p) {
-        // Base alpha increased to 0.9 for better visibility
         const baseAlpha = 0.9;
         let currentAlpha = baseAlpha;
         let currentRgb = p.rgb;
         let pulseIntensity = 0.0;
+        const glowRadius = p.size * 20;
 
         if (this.isPulsing) {
             // --- 1. Calculate Smooth Pulse Intensity (EASE IN/OUT) ---
@@ -136,11 +136,17 @@ export default class extends Controller {
             // --- 2. Phase Color Transition (Bronze/Spice to Gold) ---
             currentRgb = this.lerpColor(p.rgb, this.config.pulseColor, pulseIntensity);
 
-            // --- 3. Apply Alpha and Sparkle ---
-            const sparkleOscillation = Math.abs(Math.sin(this.time * 10 * p.glitterSpeed + p.glitterPhase)) * 0.8;
+            // --- 3. Set Glow: Stronger during pulse ---
+            this.ctx.shadowBlur = glowRadius * (1 + pulseIntensity * 1.5);
+            this.ctx.shadowColor = `rgba(${currentRgb}, 1)`;
 
-            // Final Alpha: Base alpha + glitter scaled by the pulseIntensity curve (0.9 + max 0.15 = ~1.05)
+            const sparkleOscillation = Math.abs(Math.sin(this.time * 10 * p.glitterSpeed + p.glitterPhase)) * 0.8;
             currentAlpha = baseAlpha + (sparkleOscillation * pulseIntensity * 0.15);
+        } else {
+            // --- 4. Subtle Ambient Glow: Always On ---
+            this.ctx.shadowBlur = glowRadius * 0.5;
+            this.ctx.shadowColor = `rgba(${currentRgb}, 0.5)`;
+            currentAlpha = baseAlpha;
         }
 
         // Dimming logic (for depth)
@@ -149,7 +155,14 @@ export default class extends Controller {
         }
 
         this.ctx.fillStyle = `rgba(${currentRgb}, ${currentAlpha})`;
-        this.ctx.fillRect(p.x, p.y, p.size, p.size);
+
+        // --- 5. Draw as a Circle for Smoother Light Source ---
+        this.ctx.beginPath();
+        this.ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2, false);
+        this.ctx.fill();
+
+        // Reset shadow after drawing
+        this.ctx.shadowBlur = 0;
     }
 
     animate() {
