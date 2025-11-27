@@ -8,19 +8,17 @@ export default class extends Controller {
         this.height = window.innerHeight
         this.particles = []
         this.time = 0
-        this.isPulsing = false
-        this.pulseEndTime = 0
 
-        // Configuration - SCALED UP VISUALS
+        // Configuration - FINAL BEST VERSION (NO SHADOWS)
         this.config = {
             // Particle count remains optimized for mobile performance
-            particleCount: 725,
+            particleCount: 1125,
 
-            // UPDATED: Increased size by 25% (1.8 -> 2.25, 3.6 -> 4.5)
+            // Size settings (4.25 base / 7.5 variable)
             baseSpeed: 1.0,
             variableSpeed: 0.8,
-            baseSize: 4.25,
-            variableSize: 7.5,
+            baseSize: 2.25,
+            variableSize: 4.5,
 
             oscillationScale: 10,
             oscillationSpeed: 0.04,
@@ -30,19 +28,12 @@ export default class extends Controller {
 
             // Base colors (bronze/copper/spice)
             colors: [
-                '255, 215, 0',  // Gold
-                '180, 110, 60', // Bronze
-                '139, 69, 19',  // Deep Copper
-                '92, 64, 51'    // Dark Brown/Spice
-            ],
-            pulseIntervalMin: 5000,
-            pulseIntervalMax: 10000,
-            pulseDuration: 3000,
-            // Target sparkling color
-            pulseColor: '255, 165, 0'
+                '150, 100, 50', // Uniform Base Antique Gold
+                '140, 95, 45',  // Slight variation (Darker)
+                '160, 105, 55', // Slight variation (Lighter)
+                '130, 90, 40'   // Deepest Base
+            ]
         }
-
-        this.nextPulseTime = Date.now() + this.getRandomRange(this.config.pulseIntervalMin, this.config.pulseIntervalMax)
 
         // Bind methods
         this.animate = this.animate.bind(this)
@@ -59,17 +50,6 @@ export default class extends Controller {
         window.removeEventListener('resize', this.resize)
         cancelAnimationFrame(this.animationFrame)
     }
-
-    // --- HELPER FUNCTION FOR SMOOTH COLOR TRANSITION ---
-    lerpColor(color1, color2, weight) {
-        const c1 = color1.split(',').map(n => parseInt(n.trim()));
-        const c2 = color2.split(',').map(n => parseInt(n.trim()));
-        const r = Math.round(c1[0] + (c2[0] - c1[0]) * weight);
-        const g = Math.round(c1[1] + (c2[1] - c1[1]) * weight);
-        const b = Math.round(c1[2] + (c2[2] - c1[2]) * weight);
-        return `${r}, ${g}, ${b}`;
-    }
-    // --------------------------------------------------------
 
     resize() {
         this.width = window.innerWidth
@@ -91,7 +71,7 @@ export default class extends Controller {
     }
 
     createParticle(initiallyOnScreen = false) {
-        // UPDATED: Path width increased by 25% (0.15 -> 0.1875, 180 -> 225)
+        // Path width remains wide (18.75% of width) for mobile visibility
         const spread = Math.min(this.width * 0.1875, 225)
 
         return {
@@ -126,71 +106,38 @@ export default class extends Controller {
 
     drawParticle(p) {
         const baseAlpha = 0.9;
-        let currentAlpha = baseAlpha;
-        let currentRgb = p.rgb;
-        let pulseIntensity = 0.0;
-        const glowRadius = p.size * 20;
-
-        if (this.isPulsing) {
-            // --- 1. Calculate Smooth Pulse Intensity (EASE IN/OUT) ---
-            const now = Date.now();
-            const progress = (now - (this.pulseEndTime - this.config.pulseDuration)) / this.config.pulseDuration;
-            pulseIntensity = Math.sin(progress * Math.PI);
-
-            // --- 2. Phase Color Transition (Bronze/Spice to Gold) ---
-            currentRgb = this.lerpColor(p.rgb, this.config.pulseColor, pulseIntensity);
-
-            // --- 3. Set Glow: Stronger during pulse ---
-            this.ctx.shadowBlur = glowRadius * (1 + pulseIntensity * 1.5);
-            this.ctx.shadowColor = `rgba(${currentRgb}, 1)`;
-
-            const sparkleOscillation = Math.abs(Math.sin(this.time * 10 * p.glitterSpeed + p.glitterPhase)) * 0.8;
-            currentAlpha = baseAlpha + (sparkleOscillation * pulseIntensity * 0.15);
-        } else {
-            // --- 4. Subtle Ambient Glow: Always On ---
-            this.ctx.shadowBlur = glowRadius * 0.5;
-            this.ctx.shadowColor = `rgba(${currentRgb}, 0.5)`;
-            currentAlpha = baseAlpha;
-        }
+        let currentAlpha = baseAlpha
 
         // Dimming logic (for depth)
-        if (currentRgb != this.config.pulseColor && Math.random() > 0.95) {
+        if (Math.random() > 0.95) {
             currentAlpha *= 0.7;
         }
 
-        this.ctx.fillStyle = `rgba(${currentRgb}, ${currentAlpha})`;
+        this.ctx.fillStyle = `rgba(${p.rgb}, ${currentAlpha})`;
 
         // --- 5. Draw as a Circle for Smoother Light Source ---
         this.ctx.beginPath();
         this.ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2, false);
         this.ctx.fill();
 
-        // Reset shadow after drawing
-        this.ctx.shadowBlur = 0;
+        // Shadow reset removed
     }
 
     animate() {
         this.time += this.config.pathWaveSpeed
-        const now = Date.now()
-
-        if (!this.isPulsing) {
-            if (now >= this.nextPulseTime) {
-                this.isPulsing = true
-                this.pulseEndTime = now + this.config.pulseDuration
-            }
-        } else {
-            if (now >= this.pulseEndTime) {
-                this.isPulsing = false
-                this.nextPulseTime = now + this.getRandomRange(this.config.pulseIntervalMin, this.config.pulseIntervalMax)
-            }
-        }
-
+        
+        // Full clear of the canvas background every frame
         this.ctx.clearRect(0, 0, this.width, this.height)
+
+        // Composite mode removed as it only works well with shadows/trails
+        // this.ctx.globalCompositeOperation = 'lighter';
 
         this.particles.forEach(p => {
             this.updateParticle(p)
             this.drawParticle(p)
         })
+
+        // Reset composite mode removed
 
         this.animationFrame = requestAnimationFrame(this.animate)
     }
