@@ -15,7 +15,8 @@ class PathNotificationJob < ApplicationJob
     # 3. Iterate over ALL linked subscriptions
     path.web_push_subscriptions.each do |subscription|
       begin
-        Webpush.payload_send(
+        # FIXED: Changed Webpush -> WebPush (Capital P matches the gem)
+        WebPush.payload_send(
           message: JSON.generate(message),
           endpoint: subscription.endpoint,
           p256dh: subscription.p256dh,
@@ -26,7 +27,9 @@ class PathNotificationJob < ApplicationJob
             private_key: ENV['VAPID_PRIVATE_KEY']
           }
         )
-      rescue Webpush::InvalidSubscription
+        # FIXED: Changed Webpush::InvalidSubscription -> WebPush::ExpiredSubscription
+        # This specific exception handles 410 Gone / 404 Not Found from push services.
+      rescue WebPush::ExpiredSubscription
         # Remove only the dead subscription
         subscription.destroy
       rescue => e
