@@ -5,12 +5,20 @@
   <%= stylesheet_link_tag "welcome", "data-turbo-track": "reload" %>
 <% end %>
 
+<%# The Canvas: Linked to the controller for the animation %>
+<canvas id="particle-canvas" data-controller="welcome-background"></canvas>
+
 <div id="welcome-screen">
   <div class="welcome-card">
 
     <div class="welcome-header">
-      <h1>GOLDEN PATH</h1>
-      <p>Enable Notifications</p>
+      <%# Removed the <h1>GOLDEN PATH</h1> title as requested. %>
+      <p style="font-size: 1.05rem; color: var(--text-primary); margin-bottom: 0.5rem; line-height: 1.4; font-weight: 400;">
+        Notifications are essential for the functionality of this app.
+      </p>
+      <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; font-weight: 300;">
+
+      </p>
     </div>
 
     <%# 2. Main Container acting as the "Form" wrapper %>
@@ -24,14 +32,9 @@
 
         <%# Description / Status %>
         <div style="text-align: center;">
+          <%# Simplified the explanatory text here, focusing on the action. %>
           <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
-            To use Golden Path, please register this device.
-          </p>
-
-          <%# Status Message - Updated color to match theme %>
-          <p data-push-subscription-target="status"
-             style="color: var(--btn-primary); font-weight: 700; font-size: 0.9rem; margin: 0;">
-            Status: Checking browser...
+            Give this device a descriptive name, then click 'SUBSCRIBE' below.
           </p>
         </div>
 
@@ -45,6 +48,7 @@
 
         <%# 4. Buttons %>
         <div class="welcome-buttons-container">
+
           <%# Primary Action: Subscribe %>
           <button data-action="click->push-subscription#subscribe"
                   data-push-subscription-target="button"

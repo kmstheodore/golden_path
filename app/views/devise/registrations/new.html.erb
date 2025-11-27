@@ -1,4 +1,4 @@
-<%# app/views/devise/registrations/new.html.erb %>
+<%# app/views/devise/registrations/new.html.erb - Redesigned %>
 
 <%# Reuse the welcome styles explicitly if not globally included %>
 <% content_for :head do %>
@@ -11,14 +11,7 @@
 <div id="welcome-screen">
   <div class="welcome-card">
 
-    <div class="welcome-header">
-      <h1>GOLDEN PATH</h1>
-      <p>The Path is better together.</p>
-      <%# Added the luxury quote for stylistic consistency %>
-      <p style="font-style: italic; font-size: 0.95rem; color: var(--text-secondary); margin-top: 0.75rem; line-height: 1.6; font-weight: 300;">
-        “Seek freedom and become captive of your desires. Seek discipline and find your liberty.”
-      </p>
-    </div>
+    <%# The welcome-header content was removed as requested. %>
 
     <div class="welcome-form-wrapper">
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name), data: { turbo: false }) do |f| %>
@@ -55,8 +48,8 @@
           <%# Sign Up (Primary Action - Solid Button) %>
           <%= f.submit "SIGN UP", class: "welcome-button solid-button" %>
 
-          <%# Log In (Secondary/Back - Outline Button) %>
-          <%= link_to "LOG IN", new_session_path(resource_name), class: "welcome-button outline-button" %>
+          <%# Back (Secondary/Back - Outline Button) %>
+          <%= link_to "BACK", root_path, class: "welcome-button outline-button" %>
         </div>
 
       <% end %>
