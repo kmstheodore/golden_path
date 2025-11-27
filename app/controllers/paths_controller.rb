@@ -15,15 +15,14 @@ class PathsController < ApplicationController
     @path = current_user.paths.build(path_params)
 
     if @path.save
-      # --- Add this block ---
-      if @path.web_push_subscription.present?
-        # Schedule the job to run at the specific strike_time
+      # CHANGED: Check if ANY subscriptions exist
+      if @path.web_push_subscriptions.any?
         PathNotificationJob.set(wait_until: @path.strike_time).perform_later(@path)
       end
-      # ----------------------
 
       redirect_to paths_path, notice: "Path created! (Notification scheduled)"
     else
+      # Reload devices for the form if it fails
       @devices = current_user.web_push_subscriptions.map { |sub| [sub.device_name, sub.id] }
       render :new, status: :unprocessable_entity
     end
@@ -37,6 +36,7 @@ class PathsController < ApplicationController
   private
 
   def path_params
-    params.require(:path).permit(:name, :strike_time, :web_push_subscription_id)
+    # CHANGED: Allow :web_push_subscription_ids as an array
+    params.require(:path).permit(:name, :strike_time, web_push_subscription_ids: [])
   end
 end

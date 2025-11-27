@@ -39,13 +39,26 @@
         </div>
 
         <div class="form-group">
-          <label for="path_web_push_subscription_id" style="color: var(--text-secondary); font-size: 0.9rem;">Target Device</label>
+          <label style="color: var(--text-secondary); font-size: 0.9rem;">Target Devices</label>
+
           <% if @devices.any? %>
-            <%# We style the select box to match the inputs closely %>
-            <%= form.select :web_push_subscription_id,
-                            @devices,
-                            { include_blank: "None (Don't notify)" },
-                            { class: "welcome-input", style: "cursor: pointer;" } %>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 5px;">
+              <%# Iterate over current user's subscriptions %>
+              <% current_user.web_push_subscriptions.each do |sub| %>
+                <label style="display: flex; align-items: center; gap: 10px; color: var(--text-primary); cursor: pointer;">
+                  <%# CHECKBOX LOGIC:
+                      1. name="path[web_push_subscription_ids][]" allows passing multiple IDs as an array.
+                      2. The third argument checks if the ID is already associated (for edit views or error re-renders).
+                  %>
+                  <%= check_box_tag "path[web_push_subscription_ids][]",
+                                    sub.id,
+                                    @path.web_push_subscription_ids.include?(sub.id),
+                                    class: "welcome-input",
+                                    style: "width: 20px; height: 20px; flex: 0 0 auto;" %>
+                  <span><%= sub.device_name %></span>
+                </label>
+              <% end %>
+            </div>
           <% else %>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 5px; text-align: center;">
               <em>No devices registered.

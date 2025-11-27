@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_24_223136) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_27_032035) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -20,9 +20,14 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_24_223136) do
     t.datetime "strike_time"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
-    t.bigint "web_push_subscription_id"
     t.index ["user_id"], name: "index_paths_on_user_id"
-    t.index ["web_push_subscription_id"], name: "index_paths_on_web_push_subscription_id"
+  end
+
+  create_table "paths_web_push_subscriptions", id: false, force: :cascade do |t|
+    t.bigint "path_id", null: false
+    t.bigint "web_push_subscription_id", null: false
+    t.index ["path_id", "web_push_subscription_id"], name: "index_path_subs_on_path_and_sub"
+    t.index ["web_push_subscription_id", "path_id"], name: "index_path_subs_on_sub_and_path"
   end
 
   create_table "pets", force: :cascade do |t|
@@ -177,7 +182,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_24_223136) do
   end
 
   add_foreign_key "paths", "users"
-  add_foreign_key "paths", "web_push_subscriptions"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

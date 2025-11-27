@@ -2,36 +2,36 @@ class PathNotificationJob < ApplicationJob
   queue_as :default
 
   def perform(path)
-    # 1. Guard clause: If the path or subscription was deleted, stop.
-    return unless path&.web_push_subscription
+    # 1. Guard clause: Stop if path is gone
+    return unless path
 
-    # 2. Construct the payload
+    # 2. Construct the payload (same for all devices)
     message = {
       title: "Reminder: #{path.name}",
       body: "It's time! Your task is due.",
-      path: "/paths" # Clicking the notification opens the list
+      path: "/paths"
     }
 
-    # 3. Send the notification
-    begin
-      # FIXED: Changed WebPush -> Webpush (lowercase 'p' to match the gem)
-      Webpush.payload_send(
-        message: JSON.generate(message),
-        endpoint: path.web_push_subscription.endpoint,
-        p256dh: path.web_push_subscription.p256dh,
-        auth: path.web_push_subscription.auth,
-        vapid: {
-          subject: "mailto:admin@example.com",
-          public_key: ENV['VAPID_PUBLIC_KEY'],
-          private_key: ENV['VAPID_PRIVATE_KEY']
-        }
-      )
-      # FIXED: Changed WebPush -> Webpush here as well
-    rescue Webpush::InvalidSubscription
-      # Cleanup if the browser subscription is dead
-      path.web_push_subscription.destroy
-    rescue => e
-      Rails.logger.error("PathNotificationJob Error: #{e.message}")
+    # 3. Iterate over ALL linked subscriptions
+    path.web_push_subscriptions.each do |subscription|
+      begin
+        Webpush.payload_send(
+          message: JSON.generate(message),
+          endpoint: subscription.endpoint,
+          p256dh: subscription.p256dh,
+          auth: subscription.auth,
+          vapid: {
+            subject: "mailto:admin@example.com",
+            public_key: ENV['VAPID_PUBLIC_KEY'],
+            private_key: ENV['VAPID_PRIVATE_KEY']
+          }
+        )
+      rescue Webpush::InvalidSubscription
+        # Remove only the dead subscription
+        subscription.destroy
+      rescue => e
+        Rails.logger.error("PathNotificationJob Error for Device #{subscription.device_name}: #{e.message}")
+      end
     end
   end
 end
