@@ -11,19 +11,23 @@ export default class extends Controller {
         this.isPulsing = false
         this.pulseEndTime = 0
 
-        // Configuration - OBSIDIAN PALETTE
+        // Configuration - SCALED UP VISUALS
         this.config = {
-            // UPDATED: Increased particle count to 6000 for wider, denser path
-            particleCount: 6000,
-            baseSpeed: 0.4,       // Slower drift
-            variableSpeed: 0.4,
-            baseSize: 0.6,
-            variableSize: 1.2,
+            // Particle count remains optimized for mobile performance
+            particleCount: 725,
+
+            // UPDATED: Increased size by 25% (1.8 -> 2.25, 3.6 -> 4.5)
+            baseSpeed: 1.0,
+            variableSpeed: 0.8,
+            baseSize: 4.25,
+            variableSize: 7.5,
+
             oscillationScale: 10,
-            oscillationSpeed: 0.015,
+            oscillationSpeed: 0.04,
             pathWaveAmplitude: 100,
             pathWaveFrequency: 0.005,
-            pathWaveSpeed: 0.0005,
+            pathWaveSpeed: 0.001,
+
             // Base colors (bronze/copper/spice)
             colors: [
                 '255, 215, 0',  // Gold
@@ -87,8 +91,8 @@ export default class extends Controller {
     }
 
     createParticle(initiallyOnScreen = false) {
-        // UPDATED: Increased spread to 15% of width (was 7.5%) and max pixels to 180 (was 120)
-        const spread = Math.min(this.width * 0.15, 180)
+        // UPDATED: Path width increased by 25% (0.15 -> 0.1875, 180 -> 225)
+        const spread = Math.min(this.width * 0.1875, 225)
 
         return {
             x: 0,
