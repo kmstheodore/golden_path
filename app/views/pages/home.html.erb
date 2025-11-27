@@ -91,7 +91,25 @@
     </div>
     <%# -------------------------------- %>
 
+    <% if current_user.pending_requests.any? %>
+      <div style="margin-bottom: 20px; padding: 15px; background: rgba(197, 160, 89, 0.1); border: 1px solid var(--input-focus); border-radius: 4px;">
+        <h3 style="color: var(--input-focus); font-size: 1rem; margin-bottom: 10px;">Friend Requests</h3>
 
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <% current_user.pending_requests.each do |requester| %>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: var(--text-primary); font-size: 0.9rem;"><%= requester.email %></span>
+
+              <%# "Accept" is just adding them back %>
+              <%= form_with url: friendships_path, local: true do |f| %>
+                <%= f.hidden_field :email, value: requester.email %>
+                <%= f.submit "ACCEPT", class: "welcome-button solid-button", style: "padding: 5px 15px; font-size: 0.7rem;" %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
     <%# === SCROLLABLE CONTAINER START === %>
     <div class="path-scroll-container">
       <% if @paths.any? %>
