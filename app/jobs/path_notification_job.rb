@@ -14,7 +14,8 @@ class PathNotificationJob < ApplicationJob
 
     # 3. Send the notification
     begin
-      WebPush.payload_send(
+      # FIXED: Changed WebPush -> Webpush (lowercase 'p' to match the gem)
+      Webpush.payload_send(
         message: JSON.generate(message),
         endpoint: path.web_push_subscription.endpoint,
         p256dh: path.web_push_subscription.p256dh,
@@ -25,7 +26,8 @@ class PathNotificationJob < ApplicationJob
           private_key: ENV['VAPID_PRIVATE_KEY']
         }
       )
-    rescue WebPush::InvalidSubscription
+      # FIXED: Changed WebPush -> Webpush here as well
+    rescue Webpush::InvalidSubscription
       # Cleanup if the browser subscription is dead
       path.web_push_subscription.destroy
     rescue => e
