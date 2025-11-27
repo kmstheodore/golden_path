@@ -1,9 +1,6 @@
 class PathsController < ApplicationController
   before_action :authenticate_user!
 
-  def index
-    @paths = current_user.paths.order(strike_time: :asc)
-  end
 
   def new
     @path = current_user.paths.build
@@ -20,7 +17,7 @@ class PathsController < ApplicationController
         PathNotificationJob.set(wait_until: @path.strike_time).perform_later(@path)
       end
 
-      redirect_to paths_path, notice: "Path created! (Notification scheduled)"
+      redirect_to root_path, notice: "Path created! (Notification scheduled)"
     else
       # Reload devices for the form if it fails
       @devices = current_user.web_push_subscriptions.map { |sub| [sub.device_name, sub.id] }

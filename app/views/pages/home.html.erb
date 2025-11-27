@@ -100,7 +100,15 @@
             <div class="path-item">
               <strong><%= path.name %></strong>
               <small>Due: <%= path.strike_time.to_fs(:short) %></small>
-              <small>Device: <%= path.web_push_subscription&.device_name || "All Devices (Logic TBD)" %></small>
+
+              <%# FIXED: Support multiple devices in display %>
+              <small>Devices:
+                <% if path.web_push_subscriptions.any? %>
+                  <%= path.web_push_subscriptions.map(&:device_name).join(", ") %>
+                <% else %>
+                  None
+                <% end %>
+              </small>
 
               <div class="path-actions">
                 <%= button_to "Delete", path_path(path),

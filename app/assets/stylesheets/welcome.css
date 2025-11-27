@@ -132,15 +132,64 @@
     -webkit-box-shadow: 0 0 0 1000px rgba(40, 40, 40, 1) inset;
 }
 
+/* Specific override for checkboxes to reset appearance */
+input[type="checkbox"].welcome-input {
+    -webkit-appearance: none;
+    appearance: none;
+    /* Reset the width/height to be a square box */
+    width: 24px !important;
+    height: 24px !important;
+    padding: 0;
+
+    /* Center content */
+    display: grid;
+    place-content: center;
+
+    /* Standard border/bg from theme */
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    cursor: pointer;
+
+    /* Remove the text fill color override which hides the checkmark */
+    -webkit-text-fill-color: initial;
+    -webkit-box-shadow: none;
+}
+
+/* The Checkmark (pseudo-element) */
+input[type="checkbox"].welcome-input::before {
+    content: "";
+    width: 14px;
+    height: 14px;
+    transform: scale(0); /* Hidden by default */
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em var(--input-focus); /* The checkmark color (Gold) */
+
+    /* Clip path creates the check shape */
+    transform-origin: center;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+/* Selected State */
+input[type="checkbox"].welcome-input:checked {
+    border-color: var(--input-focus);
+}
+
+input[type="checkbox"].welcome-input:checked::before {
+    transform: scale(1); /* Show checkmark */
+}
+
 .welcome-input:focus {
     border-color: var(--input-focus);
-
     background-color: #0d0d0d;
-
     box-shadow: 0 4px 20px rgba(212, 175, 55, 0.1);
-
-    -webkit-box-shadow: 0 0 0 1000px #0d0d0d inset;
 }
+
+/* Fix for checkbox focus to not have massive inset shadow */
+input[type="checkbox"].welcome-input:focus {
+    -webkit-box-shadow: none;
+}
+
 
 .welcome-input::placeholder {
     color: var(--text-muted);
