@@ -4,18 +4,20 @@
   <%= stylesheet_link_tag "welcome", "data-turbo-track": "reload" %>
 <% end %>
 
-<%# The Canvas: Linked to the controller %>
+<%# The Canvas: Linked to the controller for the animation %>
 <canvas id="particle-canvas" data-controller="welcome-background"></canvas>
 
 <div id="welcome-screen">
   <div class="welcome-card">
 
     <div class="welcome-header">
-      <h1>GOLDEN PATH</h1>
-      <p>Progress is better together.</p>
 
-      <p style="font-style: italic; font-size: 0.8rem; margin-top: 15px; opacity: 0.8; line-height: 1.4;">
-        “Seek freedom and become captive of your desires. Seek discipline and find your liberty.”
+      <p style="font-size: 1.05rem; color: var(--text-primary); margin-bottom: 0.5rem; line-height: 1.4; font-weight: 400;">
+        A tool for fostering long-term coexistence and shared accountability.
+      </p>
+      <%# ASTERISKS REMOVED %>
+      <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; font-weight: 300;">
+        Schedule precise, device-specific notifications to keep your team aligned and accountable on the Golden Path.
       </p>
     </div>
 

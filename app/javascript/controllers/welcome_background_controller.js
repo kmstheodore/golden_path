@@ -11,9 +11,10 @@ export default class extends Controller {
         this.isPulsing = false
         this.pulseEndTime = 0
 
-        // Configuration - OBSIDIAN PALETTE (Animation/Pulse settings unchanged from previous step)
+        // Configuration - OBSIDIAN PALETTE
         this.config = {
-            particleCount: 1200,
+            // UPDATED: Increased particle count by 50% (2340 * 1.5 = 3510) for a denser path
+            particleCount: 3510,
             baseSpeed: 1.0,
             variableSpeed: 0.8,
             baseSize: 0.6,
@@ -23,17 +24,17 @@ export default class extends Controller {
             pathWaveAmplitude: 100,
             pathWaveFrequency: 0.005,
             pathWaveSpeed: 0.001,
-            // PALETTE: Gold, Sand, Bronze, Spice Orange
+            // Base colors (bronze/copper/spice)
             colors: [
                 '255, 215, 0',  // Gold
-                '238, 214, 175',// Sand
-                '205, 127, 50', // Bronze
-                '210, 105, 30'  // Chocolate/Spice
+                '180, 110, 60', // Bronze
+                '139, 69, 19',  // Deep Copper
+                '92, 64, 51'    // Dark Brown/Spice
             ],
             pulseIntervalMin: 5000,
             pulseIntervalMax: 10000,
             pulseDuration: 3000,
-            // PULSE COLOR: Rich Gold
+            // Target sparkling color
             pulseColor: '255, 165, 0'
         }
 
@@ -55,6 +56,17 @@ export default class extends Controller {
         cancelAnimationFrame(this.animationFrame)
     }
 
+    // --- HELPER FUNCTION FOR SMOOTH COLOR TRANSITION ---
+    lerpColor(color1, color2, weight) {
+        const c1 = color1.split(',').map(n => parseInt(n.trim()));
+        const c2 = color2.split(',').map(n => parseInt(n.trim()));
+        const r = Math.round(c1[0] + (c2[0] - c1[0]) * weight);
+        const g = Math.round(c1[1] + (c2[1] - c1[1]) * weight);
+        const b = Math.round(c1[2] + (c2[2] - c1[2]) * weight);
+        return `${r}, ${g}, ${b}`;
+    }
+    // --------------------------------------------------------
+
     resize() {
         this.width = window.innerWidth
         this.height = window.innerHeight
@@ -75,7 +87,8 @@ export default class extends Controller {
     }
 
     createParticle(initiallyOnScreen = false) {
-        const spread = Math.min(this.width * 0.05, 80)
+        // Spatial spread remains the same (0.075 width) to keep the path thickness consistent
+        const spread = Math.min(this.width * 0.075, 120)
 
         return {
             x: 0,
@@ -108,30 +121,31 @@ export default class extends Controller {
     }
 
     drawParticle(p) {
-        let currentAlpha = 0.6 // Base alpha from the CSS change before
-        let currentRgb = p.rgb
-        let pulseIntensity = 0.0
+        // Base alpha increased to 0.9 for better visibility
+        const baseAlpha = 0.9;
+        let currentAlpha = baseAlpha;
+        let currentRgb = p.rgb;
+        let pulseIntensity = 0.0;
 
         if (this.isPulsing) {
             // --- 1. Calculate Smooth Pulse Intensity (EASE IN/OUT) ---
-            const now = Date.now()
-            const progress = (now - (this.pulseEndTime - this.config.pulseDuration)) / this.config.pulseDuration
-            // Sine curve for smooth ease-in (0 -> 1) and ease-out (1 -> 0)
-            pulseIntensity = Math.sin(progress * Math.PI)
+            const now = Date.now();
+            const progress = (now - (this.pulseEndTime - this.config.pulseDuration)) / this.config.pulseDuration;
+            pulseIntensity = Math.sin(progress * Math.PI);
 
-            // --- 2. Apply Pulse Color and Scale Alpha ---
-            currentRgb = this.config.pulseColor
+            // --- 2. Phase Color Transition (Bronze/Spice to Gold) ---
+            currentRgb = this.lerpColor(p.rgb, this.config.pulseColor, pulseIntensity);
 
-            // Internal glitter oscillation (always runs when pulsing)
+            // --- 3. Apply Alpha and Sparkle ---
             const sparkleOscillation = Math.abs(Math.sin(this.time * 10 * p.glitterSpeed + p.glitterPhase)) * 0.8;
 
-            // Final Alpha: Base alpha + glitter scaled by the pulseIntensity curve (eased in/out)
-            currentAlpha = 0.6 + (sparkleOscillation * pulseIntensity * 0.4);
+            // Final Alpha: Base alpha + glitter scaled by the pulseIntensity curve (0.9 + max 0.15 = ~1.05)
+            currentAlpha = baseAlpha + (sparkleOscillation * pulseIntensity * 0.15);
         }
 
-        // For particles not in the pulse color, randomly make them a little darker to add depth
+        // Dimming logic (for depth)
         if (currentRgb != this.config.pulseColor && Math.random() > 0.95) {
-            currentAlpha *= 0.5
+            currentAlpha *= 0.7;
         }
 
         this.ctx.fillStyle = `rgba(${currentRgb}, ${currentAlpha})`;
