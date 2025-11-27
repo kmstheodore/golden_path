@@ -1,26 +1,28 @@
 class PathsController < ApplicationController
   before_action :authenticate_user!
 
-
   def new
     @path = current_user.paths.build
-    # Get list of devices for the dropdown
+    # Existing: My devices
     @devices = current_user.web_push_subscriptions.map { |sub| [sub.device_name, sub.id] }
+
+    # New: My Mutual Friends
+    @friends = current_user.mutual_friends
   end
 
   def create
     @path = current_user.paths.build(path_params)
 
     if @path.save
-      # CHANGED: Check if ANY subscriptions exist
-      if @path.web_push_subscriptions.any?
+      # Schedule if there is ANY recipient (Device OR Friend)
+      if @path.web_push_subscriptions.any? || @path.shared_users.any?
         PathNotificationJob.set(wait_until: @path.strike_time).perform_later(@path)
       end
 
       redirect_to root_path, notice: "Path created! (Notification scheduled)"
     else
-      # Reload devices for the form if it fails
       @devices = current_user.web_push_subscriptions.map { |sub| [sub.device_name, sub.id] }
+      @friends = current_user.mutual_friends
       render :new, status: :unprocessable_entity
     end
   end
@@ -33,7 +35,7 @@ class PathsController < ApplicationController
   private
 
   def path_params
-    # CHANGED: Allow :web_push_subscription_ids as an array
-    params.require(:path).permit(:name, :strike_time, web_push_subscription_ids: [])
+    # Added shared_user_ids: []
+    params.require(:path).permit(:name, :strike_time, web_push_subscription_ids: [], shared_user_ids: [])
   end
 end

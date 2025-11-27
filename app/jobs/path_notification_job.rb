@@ -2,20 +2,27 @@ class PathNotificationJob < ApplicationJob
   queue_as :default
 
   def perform(path)
-    # 1. Guard clause: Stop if path is gone
     return unless path
 
-    # 2. Construct the payload (same for all devices)
     message = {
       title: "Reminder: #{path.name}",
       body: "It's time! Your task is due.",
       path: "/paths"
     }
 
-    # 3. Iterate over ALL linked subscriptions
-    path.web_push_subscriptions.each do |subscription|
+    # 1. Get Creator's selected devices
+    my_subs = path.web_push_subscriptions
+
+    # 2. Get Shared Friends' devices
+    #    We look up all subscriptions belonging to the users this path is shared with
+    friend_subs = WebPushSubscription.where(user_id: path.shared_user_ids)
+
+    # 3. Combine and Deduplicate
+    all_subscriptions = (my_subs + friend_subs).uniq
+
+    # 4. Notify everyone
+    all_subscriptions.each do |subscription|
       begin
-        # FIXED: Changed Webpush -> WebPush (Capital P matches the gem)
         WebPush.payload_send(
           message: JSON.generate(message),
           endpoint: subscription.endpoint,
@@ -27,10 +34,7 @@ class PathNotificationJob < ApplicationJob
             private_key: ENV['VAPID_PRIVATE_KEY']
           }
         )
-        # FIXED: Changed Webpush::InvalidSubscription -> WebPush::ExpiredSubscription
-        # This specific exception handles 410 Gone / 404 Not Found from push services.
       rescue WebPush::ExpiredSubscription
-        # Remove only the dead subscription
         subscription.destroy
       rescue => e
         Rails.logger.error("PathNotificationJob Error for Device #{subscription.device_name}: #{e.message}")

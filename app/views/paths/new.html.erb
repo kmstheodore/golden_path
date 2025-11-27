@@ -29,8 +29,6 @@
         </div>
 
         <div class="form-group">
-          <%# For DateTime fields, browsers may display an unstyled native selector. %>
-          <%# Use a wrapper for custom labeling if default isn't clear enough. %>
           <label style="color: var(--text-secondary); font-size: 0.9rem;">When to notify?</label>
           <%= form.datetime_field :strike_time,
                                   required: true,
@@ -43,13 +41,8 @@
 
           <% if @devices.any? %>
             <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 5px;">
-              <%# Iterate over current user's subscriptions %>
               <% current_user.web_push_subscriptions.each do |sub| %>
                 <label style="display: flex; align-items: center; gap: 10px; color: var(--text-primary); cursor: pointer;">
-                  <%# CHECKBOX LOGIC:
-                      1. name="path[web_push_subscription_ids][]" allows passing multiple IDs as an array.
-                      2. The third argument checks if the ID is already associated (for edit views or error re-renders).
-                  %>
                   <%= check_box_tag "path[web_push_subscription_ids][]",
                                     sub.id,
                                     @path.web_push_subscription_ids.include?(sub.id),
@@ -68,14 +61,46 @@
           <% end %>
         </div>
 
-        <div class="welcome-buttons-container" style="margin-top: 20px;">
-          <%# Primary Action: Create Path %>
-          <%= form.submit "CREATE PATH", class: "welcome-button solid-button" %>
+        <div class="form-group">
+          <label style="color: var(--text-secondary); font-size: 0.9rem;">Share with Friends</label>
 
-          <%# Secondary Action: Back %>
+          <% if @friends.any? %>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 5px;">
+              <% @friends.each do |friend| %>
+                <label style="display: flex; align-items: center; gap: 10px; color: var(--text-primary); cursor: pointer;">
+                  <%= check_box_tag "path[shared_user_ids][]",
+                                    friend.id,
+                                    @path.shared_user_ids.include?(friend.id),
+                                    class: "welcome-input",
+                                    style: "width: 20px; height: 20px; flex: 0 0 auto;" %>
+                  <span><%= friend.email %></span>
+                </label>
+              <% end %>
+            </div>
+          <% else %>
+            <p style="color: var(--text-muted); font-size: 0.85rem; text-align: center;">
+              <em>You have no mutual connections yet.</em>
+            </p>
+          <% end %>
+        </div>
+
+        <div class="welcome-buttons-container" style="margin-top: 20px;">
+          <%= form.submit "CREATE PATH", class: "welcome-button solid-button" %>
           <%= link_to "BACK", paths_path, class: "welcome-button outline-button" %>
         </div>
+      <% end %> <%# END OF MAIN FORM %>
+
+      <%# ADD FRIEND FORM (Only visible if no friends, placed OUTSIDE main form to valid nesting) %>
+      <% unless @friends.any? %>
+        <div style="margin-top: 20px; border-top: 1px solid var(--card-border); padding-top: 20px;">
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 10px;">Add a friend to get started:</p>
+          <%= form_with url: friendships_path, local: true, style: "display:flex; gap: 10px;" do |f| %>
+            <%= f.email_field :email, placeholder: "Friend's Email", class: "welcome-input", style: "padding: 0.8rem;" %>
+            <%= f.submit "ADD", class: "welcome-button solid-button", style: "flex: 0 0 auto; width: auto; padding: 0 1.5rem;" %>
+          <% end %>
+        </div>
       <% end %>
+
     </div>
   </div>
 </div>

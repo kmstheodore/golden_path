@@ -10,9 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_27_032035) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_27_075217) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "friendships", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "friend_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["friend_id"], name: "index_friendships_on_friend_id"
+    t.index ["user_id", "friend_id"], name: "index_friendships_on_user_id_and_friend_id", unique: true
+    t.index ["user_id"], name: "index_friendships_on_user_id"
+  end
+
+  create_table "path_shares", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "path_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["path_id", "user_id"], name: "index_path_shares_on_path_id_and_user_id", unique: true
+    t.index ["path_id"], name: "index_path_shares_on_path_id"
+    t.index ["user_id"], name: "index_path_shares_on_user_id"
+  end
 
   create_table "paths", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -181,6 +201,10 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_27_032035) do
     t.index ["user_id"], name: "index_web_push_subscriptions_on_user_id"
   end
 
+  add_foreign_key "friendships", "users"
+  add_foreign_key "friendships", "users", column: "friend_id"
+  add_foreign_key "path_shares", "paths"
+  add_foreign_key "path_shares", "users"
   add_foreign_key "paths", "users"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

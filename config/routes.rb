@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   # We give this a distinct name (as: :authenticated_root) to prevent the naming conflict.
   authenticated :user do
     root "pages#home", as: :authenticated_root
+    resources :friendships, only: [:create, :destroy]
   end
 
   # 2. For everyone else (guests), send them to the welcome page.
