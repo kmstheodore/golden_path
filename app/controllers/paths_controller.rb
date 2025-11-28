@@ -32,6 +32,19 @@ class PathsController < ApplicationController
     redirect_to paths_path, notice: "Path removed."
   end
 
+  def mark_as_done
+    # Use current_user.paths.find to ensure the user owns this path
+    @path = current_user.paths.find(params[:id])
+
+    if @path.update(done_at: Time.current)
+      flash[:notice] = "\"#{@path.name}\" marked as done! 🎉"
+    else
+      flash[:alert] = "Failed to mark \"#{@path.name}\" as done."
+    end
+    # Redirect to the dashboard root path
+    redirect_to authenticated_root_path
+  end
+
   private
 
   def path_params

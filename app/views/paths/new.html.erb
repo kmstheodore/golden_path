@@ -10,7 +10,7 @@
 <div id="welcome-screen">
   <div class="welcome-card" style="padding: 2rem 1.5rem;">
 
-    <h1 style="color: var(--text-primary); margin-bottom: 20px; font-size: 2.5vh; flex-shrink: 0;">Create New Path</h1>
+    <h1 style="color: var(--text-primary); margin-bottom: 20px; font-size: 2.5vh; flex-shrink: 0;">New Path</h1>
 
     <div class="welcome-form-wrapper">
       <%# The Rails form wrapper matches the styling of the wrapper div on other pages %>
@@ -24,7 +24,7 @@
         <div class="form-group">
           <%= form.text_field :name,
                               required: true,
-                              placeholder: "Path Name (e.g. Deploy to Production)",
+                              placeholder: "Path Name",
                               class: "welcome-input" %>
         </div>
 
